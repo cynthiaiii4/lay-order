@@ -97,3 +97,5 @@ C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.addtable
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.addrelationship.resources
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.adjvertify.resources
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.csprojAssemblyReference.cache
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.adjcheckname.resources
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.addArea.resources

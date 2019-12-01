@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -46,22 +47,26 @@ namespace sys.Models
         // POST: Accounts/Create
         // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
         // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
+
+        #region 註冊API
         [HttpPost]
         //[ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Tel,Password,PasswordSalt,Name,Birth,City,Dist,Vertify,Check,IsTable")] Account account)
         {
-            if (db.Accounts.Where(x => x.Tel == account.Tel).Count()>0)
+            try
             {
-                return Content("此電話已存在，請勿重複申請");
-            }
+                if (db.Accounts.Where(x => x.Tel == account.Tel).Count() > 0)
+                {
+                    return Content("此電話已存在，請勿重複申請");
+                }
 
 
-            //產生密碼鹽以及密碼加密
+                //產生密碼鹽以及密碼加密
                 string salt = Guid.NewGuid().ToString();
-                account.Password = GenerateHashWithSalt(account.Password,salt);
+                account.Password = GenerateHashWithSalt(account.Password, salt);
                 account.PasswordSalt = salt;
                 //寄發SMS
-                string text =SendSMS(account.Tel);
+                string text = SendSMS(account.Tel);
                 if (text == "fail")
                 {
                     return Content("fail");
@@ -70,9 +75,30 @@ namespace sys.Models
                 account.Vertify = text;
                 db.Accounts.Add(account);
                 db.SaveChanges();
-            
+                //存註冊ID給驗證API用
+                HttpCookie RegisteredId = new HttpCookie("RegisteredId");
+                RegisteredId.Value= account.Id.ToString();
+                Response.Cookies.Add(RegisteredId);
+                //存註冊電話給重新寄發簡訊用
+                HttpCookie RegisteredTel = new HttpCookie("RegisteredTel");
+                RegisteredTel.Value = account.Tel;
+                Response.Cookies.Add(RegisteredTel);
+                //記住總共發過幾次簡訊
+                HttpCookie RegisteredSend = new HttpCookie("RegisteredSend");
+                RegisteredSend.Value = 1.ToString();
+                Response.Cookies.Add(RegisteredSend);
+                //驗證次數預設0
+                HttpCookie RegisteredFail = new HttpCookie("RegisteredFail");
+                RegisteredFail.Value = 0.ToString();
+                Response.Cookies.Add(RegisteredFail);
+                
                 return Content("success");
-            
+            }
+            catch(Exception)
+            {
+                return Content("fail");
+            }
+
         }
 
         #region 密碼加密
@@ -103,9 +129,9 @@ namespace sys.Models
             int vertify = vertifyN.Next(100000, 999999);
             //組成簡訊內容並寄發
             string msg = "你好，您在lay-order的帳號驗證碼為" + vertify + "。請於驗證頁面輸入";
-            msg=HttpUtility.UrlEncode(msg);
+            msg = HttpUtility.UrlEncode(msg);
             string url = "http://api.every8d.com/API21/HTTP/sendSMS.ashx?UID=0932961027&PWD=layorder&SB=vertify&MSG=" + msg + "&DEST=" + Tel + "&ST=";
-            string text =GetVertifyNumber(url);
+            string text = GetAPIResponse(url);
             //判斷回傳值
             if (text.StartsWith("-"))
             {
@@ -115,10 +141,9 @@ namespace sys.Models
             {
                 return vertify.ToString();
             }
-
         }
         //戳簡訊API
-        private static string GetVertifyNumber(string Url)
+        private static string GetAPIResponse(string Url)
         {
             try
             {
@@ -132,12 +157,100 @@ namespace sys.Models
 
                 return text;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                //return string.Empty;
-                throw;
+                return string.Empty;
             }
         }
+
+        #endregion
+
+
+        #endregion
+
+        #region 確認驗證碼
+        public ActionResult Vertify(string Vertify)
+        {
+            HttpCookie RegisteredId = Request.Cookies["RegisteredId"];
+            int id = Convert.ToInt32(RegisteredId.Value);
+            Account account = db.Accounts.Find(Convert.ToInt32(RegisteredId.Value));
+            if (Request.Cookies["RegisteredFail"] == null)
+            {
+                HttpCookie RegisteredFail2 = new HttpCookie("RegisteredFail");
+                RegisteredFail2.Value = 0.ToString();
+                Response.Cookies.Add(RegisteredFail2);
+            }
+
+            HttpCookie RegisteredFail = Request.Cookies["RegisteredFail"];
+            if (db.Accounts.Where(x => x.Id == id && x.Vertify == Vertify).Count() > 0)
+            {
+                account.IsCheck = true;
+                db.SaveChanges();
+                return Content("success");
+            }
+            else
+            {
+                RegisteredFail.Value = (Convert.ToInt32(RegisteredFail.Value) + 1).ToString();
+                Response.Cookies.Add(RegisteredFail);
+                if (RegisteredFail.Value == "3")
+                {
+                    account.Vertify = 0.ToString();
+                    db.SaveChanges();
+                    RegisteredFail.Value = 0.ToString();
+                    Response.Cookies.Add(RegisteredFail);
+                    return Content("驗證碼輸入失敗3次，請重新取得驗證碼");
+                }
+                return Content("驗證失敗，請重新輸入");
+            }
+
+        }
+        #endregion
+
+        #region 重新寄發驗證碼
+        public ActionResult ReSendSMS()
+        {
+            try
+            {
+                HttpCookie RegisteredId = Request.Cookies["RegisteredId"];
+                HttpCookie RegisteredTel = Request.Cookies["RegisteredTel"];
+                HttpCookie RegisteredSend = Request.Cookies["RegisteredSend"];
+                Account account = db.Accounts.Find(Convert.ToInt32(RegisteredId.Value));
+                if (RegisteredSend.Value == "3")
+                {
+                    return Content("已寄發3次驗證碼，請您再次確認電話是否正確");
+                }
+
+                //隨機產生6位數字變成驗證碼
+                Random vertifyN = new Random();
+                int vertify = vertifyN.Next(100000, 999999);
+                //組成簡訊內容並寄發
+                string msg = "你好，您在lay-order的帳號驗證碼為" + vertify + "。請於驗證頁面輸入";
+                msg = HttpUtility.UrlEncode(msg);
+                string url =
+                    "http://api.every8d.com/API21/HTTP/sendSMS.ashx?UID=0932961027&PWD=layorder&SB=vertify&MSG=" + msg +
+                    "&DEST=" + RegisteredTel.Value + "&ST=";
+                string text = GetAPIResponse(url);
+                //判斷回傳值
+                if (text.StartsWith("-"))
+                {
+                    return Content("fail");
+                }
+                else
+                {
+                    account.Vertify = vertify.ToString();
+                    db.SaveChanges();
+                    RegisteredSend.Value = (Convert.ToInt32(RegisteredSend.Value) + 1).ToString();
+                    Response.Cookies.Add(RegisteredSend);
+                    return Content("success");
+                }
+            }
+            catch
+            {
+                return Content("fail");
+            }
+           
+        }
+
 
         #endregion
 

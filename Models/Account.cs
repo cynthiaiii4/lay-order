@@ -54,7 +54,7 @@ namespace sys.Models
 
         
         [Display(Name = "是否驗證")]
-        public bool Check { get; set; }
+        public bool IsCheck { get; set; }
 
         [Display(Name = "內用外帶")]
         public bool IsTable { get; set; }

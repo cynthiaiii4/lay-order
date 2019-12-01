@@ -131,6 +131,7 @@
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\MembersController.cs" />
+    <Compile Include="Controllers\AreasController.cs" />
     <Compile Include="Controllers\ContactViewModelsController.cs" />
     <Compile Include="Filters\PermissionFilter.cs" />
     <Compile Include="Global.asax.cs">
@@ -176,6 +177,14 @@
     <Compile Include="Migrations\201911290737271_adjvertify.Designer.cs">
       <DependentUpon>201911290737271_adjvertify.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912010658258_adjcheckname.cs" />
+    <Compile Include="Migrations\201912010658258_adjcheckname.Designer.cs">
+      <DependentUpon>201912010658258_adjcheckname.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912010930511_addArea.cs" />
+    <Compile Include="Migrations\201912010930511_addArea.Designer.cs">
+      <DependentUpon>201912010930511_addArea.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
@@ -191,6 +200,7 @@
     <Compile Include="Models\Permission.cs" />
     <Compile Include="Models\ProductCategory.cs" />
     <Compile Include="Models\ProductList.cs" />
+    <Compile Include="Models\Area.cs" />
     <Compile Include="Models\Voucher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -251,6 +261,11 @@
     <Content Include="Views\Accounts\Details.cshtml" />
     <Content Include="Views\Accounts\Edit.cshtml" />
     <Content Include="Views\Accounts\Index.cshtml" />
+    <Content Include="Views\Areas\Create.cshtml" />
+    <Content Include="Views\Areas\Delete.cshtml" />
+    <Content Include="Views\Areas\Details.cshtml" />
+    <Content Include="Views\Areas\Edit.cshtml" />
+    <Content Include="Views\Areas\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -299,6 +314,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911290737271_adjvertify.resx">
       <DependentUpon>201911290737271_adjvertify.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912010658258_adjcheckname.resx">
+      <DependentUpon>201912010658258_adjcheckname.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912010930511_addArea.resx">
+      <DependentUpon>201912010930511_addArea.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

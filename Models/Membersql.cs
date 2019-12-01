@@ -43,6 +43,8 @@
 
         public virtual DbSet<holiday> holiday { get; set; }
 
+        public virtual DbSet<Area> Areas { get; set; }
+
         //騙精靈寫程式要記得砍掉
         //public virtual DbSet<ContactViewModel> ContactViewModel { get; set; }
     }
