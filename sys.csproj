@@ -185,13 +185,28 @@
     <Compile Include="Migrations\201912010930511_addArea.Designer.cs">
       <DependentUpon>201912010930511_addArea.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912020824453_addcity.cs" />
+    <Compile Include="Migrations\201912020824453_addcity.Designer.cs">
+      <DependentUpon>201912020824453_addcity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912021023337_addMSG\WRONG.cs" />
+    <Compile Include="Migrations\201912021024108_addMSGandWRONG.cs" />
+    <Compile Include="Migrations\201912021024108_addMSGandWRONG.Designer.cs">
+      <DependentUpon>201912021024108_addMSGandWRONG.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912021025451_addMSGandWRONG1.cs" />
+    <Compile Include="Migrations\201912021025451_addMSGandWRONG1.Designer.cs">
+      <DependentUpon>201912021025451_addMSGandWRONG1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
     <Compile Include="Models\Banner.cs" />
     <Compile Include="Models\Company.cs" />
     <Compile Include="Models\ContactViewModel.cs" />
+    <Compile Include="Models\County.cs" />
     <Compile Include="Models\EnumList.cs" />
+    <Compile Include="Models\GovArea.cs" />
     <Compile Include="Models\holiday.cs" />
     <Compile Include="Models\Member.cs" />
     <Compile Include="Models\Membersql.cs" />
@@ -320,6 +335,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912010930511_addArea.resx">
       <DependentUpon>201912010930511_addArea.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912020824453_addcity.resx">
+      <DependentUpon>201912020824453_addcity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912021024108_addMSGandWRONG.resx">
+      <DependentUpon>201912021024108_addMSGandWRONG.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912021025451_addMSGandWRONG1.resx">
+      <DependentUpon>201912021025451_addMSGandWRONG1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -59,7 +59,10 @@ namespace sys.Models
         [Display(Name = "內用外帶")]
         public bool IsTable { get; set; }
 
+        [Display(Name = "寄送簡訊次數")]
+        public int Sent { get; set; }
 
-
+        [Display(Name = "輸入錯誤次數")]
+        public int wrong { get; set; }
     }
 }

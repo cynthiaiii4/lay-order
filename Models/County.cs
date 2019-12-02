@@ -4,11 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
-using Newtonsoft.Json;
 
 namespace sys.Models
 {
-    public class Area
+    public class County
     {
         [Key]
         [Required]
@@ -17,12 +16,6 @@ namespace sys.Models
 
         [Display(Name = "城市")]
         [MaxLength(200)]
-        public string County { get; set; }
-
-        [Display(Name = "區域")]
-        [MaxLength(200)]
-        public string Town { get; set; }
-
+        public string City { get; set; }
     }
-
 }

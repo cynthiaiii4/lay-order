@@ -10,18 +10,13 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 
 namespace sys.Models
 {
     public class AccountsController : Controller
     {
         private Membersql db = new Membersql();
-
-        // GET: Accounts
-        public ActionResult Index()
-        {
-            return View(db.Accounts.ToList());
-        }
 
         // GET: Accounts/Details/5
         public ActionResult Details(int? id)
@@ -73,24 +68,32 @@ namespace sys.Models
                 }
 
                 account.Vertify = text;
+                //記住總共發過幾次簡訊
+                account.Sent = 1;
+                //輸錯驗證次數預設0
+                account.wrong = 0;
                 db.Accounts.Add(account);
                 db.SaveChanges();
                 //存註冊ID給驗證API用
+                //Session["RegisteredId"] = account.Id.ToString();
                 HttpCookie RegisteredId = new HttpCookie("RegisteredId");
                 RegisteredId.Value= account.Id.ToString();
                 Response.Cookies.Add(RegisteredId);
                 //存註冊電話給重新寄發簡訊用
-                HttpCookie RegisteredTel = new HttpCookie("RegisteredTel");
-                RegisteredTel.Value = account.Tel;
-                Response.Cookies.Add(RegisteredTel);
+                //Session["RegisteredTel"] = account.Tel;
+                //HttpCookie RegisteredTel = new HttpCookie("RegisteredTel");
+                //RegisteredTel.Value = account.Tel;
+                //Response.Cookies.Add(RegisteredTel);
                 //記住總共發過幾次簡訊
-                HttpCookie RegisteredSend = new HttpCookie("RegisteredSend");
-                RegisteredSend.Value = 1.ToString();
-                Response.Cookies.Add(RegisteredSend);
+                //Session["RegisteredSend"] =1;
+                //HttpCookie RegisteredSend = new HttpCookie("RegisteredSend");
+                //RegisteredSend.Value = 1.ToString();
+                //Response.Cookies.Add(RegisteredSend);
                 //驗證次數預設0
-                HttpCookie RegisteredFail = new HttpCookie("RegisteredFail");
-                RegisteredFail.Value = 0.ToString();
-                Response.Cookies.Add(RegisteredFail);
+                //Session["RegisteredFail"] = 0;
+                //HttpCookie RegisteredFail = new HttpCookie("RegisteredFail");
+                //RegisteredFail.Value = 0.ToString();
+                //Response.Cookies.Add(RegisteredFail);
                 
                 return Content("success");
             }
@@ -173,33 +176,48 @@ namespace sys.Models
         {
             HttpCookie RegisteredId = Request.Cookies["RegisteredId"];
             int id = Convert.ToInt32(RegisteredId.Value);
-            Account account = db.Accounts.Find(Convert.ToInt32(RegisteredId.Value));
-            if (Request.Cookies["RegisteredFail"] == null)
-            {
-                HttpCookie RegisteredFail2 = new HttpCookie("RegisteredFail");
-                RegisteredFail2.Value = 0.ToString();
-                Response.Cookies.Add(RegisteredFail2);
-            }
+            //int id = Convert.ToInt32(Session["RegisteredId"]);
+            //Account account = db.Accounts.Find(Convert.ToInt32(RegisteredId.Value));
+            Account account = db.Accounts.Find(id);
+            //if (Request.Cookies["RegisteredFail"] == null)
+            //{
+            //    HttpCookie RegisteredFail2 = new HttpCookie("RegisteredFail");
+            //    RegisteredFail2.Value = 0.ToString();
+            //    Response.Cookies.Add(RegisteredFail2);
+            //}
 
-            HttpCookie RegisteredFail = Request.Cookies["RegisteredFail"];
+            //HttpCookie RegisteredFail = Request.Cookies["RegisteredFail"];
             if (db.Accounts.Where(x => x.Id == id && x.Vertify == Vertify).Count() > 0)
             {
                 account.IsCheck = true;
+                account.Sent = 0;
+                account.wrong = 0;
                 db.SaveChanges();
                 return Content("success");
             }
             else
             {
-                RegisteredFail.Value = (Convert.ToInt32(RegisteredFail.Value) + 1).ToString();
-                Response.Cookies.Add(RegisteredFail);
-                if (RegisteredFail.Value == "3")
+                //RegisteredFail.Value = (Convert.ToInt32(RegisteredFail.Value) + 1).ToString();
+                //Response.Cookies.Add(RegisteredFail);
+                //int fail = Convert.ToInt32(Session["RegisteredFail"]);
+                int fail = account.wrong;
+                fail = fail + 1;
+                //Session["RegisteredFail"] = fail;
+                account.wrong = fail;
+                //if (RegisteredFail.Value == "3")
+                if (fail==3)
                 {
                     account.Vertify = 0.ToString();
+                    //db.SaveChanges();
+                    //RegisteredFail.Value = 0.ToString();
+                    //Response.Cookies.Add(RegisteredFail);
+                    //fail = 0;
+                    //Session["RegisteredFail"] = fail;
+                    account.wrong = 0;
                     db.SaveChanges();
-                    RegisteredFail.Value = 0.ToString();
-                    Response.Cookies.Add(RegisteredFail);
                     return Content("驗證碼輸入失敗3次，請重新取得驗證碼");
                 }
+                db.SaveChanges();
                 return Content("驗證失敗，請重新輸入");
             }
 
@@ -211,11 +229,24 @@ namespace sys.Models
         {
             try
             {
-                HttpCookie RegisteredId = Request.Cookies["RegisteredId"];
-                HttpCookie RegisteredTel = Request.Cookies["RegisteredTel"];
-                HttpCookie RegisteredSend = Request.Cookies["RegisteredSend"];
-                Account account = db.Accounts.Find(Convert.ToInt32(RegisteredId.Value));
-                if (RegisteredSend.Value == "3")
+                    HttpCookie RegisteredId = Request.Cookies["RegisteredId"];
+                //    HttpCookie RegisteredTel = Request.Cookies["RegisteredTel"];
+                //    HttpCookie RegisteredSend = Request.Cookies["RegisteredSend"];
+                //    Account account = db.Accounts.Find(Convert.ToInt32(RegisteredId.Value));
+                //    if (RegisteredSend.Value == "3")
+                //    {
+                //        return Content("已寄發3次驗證碼，請您再次確認電話是否正確");
+                //    }
+                //int id = Convert.ToInt32(Session["RegisteredId"]);
+                //int sent = Convert.ToInt32(Session["RegisteredSend"]);
+                
+                int id = Convert.ToInt32(RegisteredId.Value);
+                Account account = db.Accounts.Find(id);
+                int sent = account.Sent;
+                //Account account = db.Accounts.Find(Convert.ToInt32(RegisteredId.Value));
+                //Account account = db.Accounts.Find(id);
+                //if (RegisteredSend.Value == "3")
+                if (sent == 3)
                 {
                     return Content("已寄發3次驗證碼，請您再次確認電話是否正確");
                 }
@@ -226,9 +257,12 @@ namespace sys.Models
                 //組成簡訊內容並寄發
                 string msg = "你好，您在lay-order的帳號驗證碼為" + vertify + "。請於驗證頁面輸入";
                 msg = HttpUtility.UrlEncode(msg);
+                //string url =
+                //    "http://api.every8d.com/API21/HTTP/sendSMS.ashx?UID=0932961027&PWD=layorder&SB=vertify&MSG=" + msg +
+                //    "&DEST=" +Session["RegisteredTel"] + "&ST=";
                 string url =
                     "http://api.every8d.com/API21/HTTP/sendSMS.ashx?UID=0932961027&PWD=layorder&SB=vertify&MSG=" + msg +
-                    "&DEST=" + RegisteredTel.Value + "&ST=";
+                    "&DEST=" + account.Tel + "&ST=";
                 string text = GetAPIResponse(url);
                 //判斷回傳值
                 if (text.StartsWith("-"))
@@ -238,9 +272,12 @@ namespace sys.Models
                 else
                 {
                     account.Vertify = vertify.ToString();
+                    account.Sent = sent + 1;
                     db.SaveChanges();
-                    RegisteredSend.Value = (Convert.ToInt32(RegisteredSend.Value) + 1).ToString();
-                    Response.Cookies.Add(RegisteredSend);
+                    //RegisteredSend.Value = (Convert.ToInt32(RegisteredSend.Value) + 1).ToString();
+                    //Response.Cookies.Add(RegisteredSend);
+                    //sent = sent + 1;
+                    //Session["RegisteredSend"] = sent;
                     return Content("success");
                 }
             }
@@ -254,6 +291,13 @@ namespace sys.Models
 
         #endregion
 
+        #region 優惠劵
+        public ActionResult Voucher()
+        {
+            DateTime now= DateTime.UtcNow.AddHours(08);
+            return Content(JsonConvert.SerializeObject(db.Vouchers.Where(x => x.EndTime > now && x.StartTime < now).ToList()));
+        }
+        #endregion
 
         // GET: Accounts/Edit/5
         public ActionResult Edit(int? id)

@@ -47,7 +47,6 @@ namespace sys.Areas.Admin.Controllers
         {
             //當要串成不規則的json給別人時使用
             var about = _db.Members.ToList();
-
             //如果資料庫不想要全部顯示,只想顯示部分欄位要用Select
             var newAbout = about.Select(x => new {Account = x.Account, name = x.Name});
             //JObject,list內只能是基本型別
@@ -80,11 +79,8 @@ namespace sys.Areas.Admin.Controllers
             return Content(jsonContent, "application/json");
            
         }
-
-
         public ActionResult Login()
         {
-            
             return View();
         }
         [HttpPost]
@@ -98,8 +94,6 @@ namespace sys.Areas.Admin.Controllers
             }
             string userData = JsonConvert.SerializeObject(member);
             SetAuthenTicket(userData, member.Account);
-
-
             return RedirectToAction("Index","Members");
         }
         //驗證函數
@@ -113,7 +107,6 @@ namespace sys.Areas.Admin.Controllers
             HttpCookie authenticationcookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
             //將Cookie寫入回應
             Response.Cookies.Add(authenticationcookie);
-
         }
     }
 }

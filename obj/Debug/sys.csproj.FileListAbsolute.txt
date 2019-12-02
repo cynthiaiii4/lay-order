@@ -99,3 +99,6 @@ C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.adjverti
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.csprojAssemblyReference.cache
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.adjcheckname.resources
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.addArea.resources
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.addcity.resources
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.addMSGandWRONG.resources
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.addMSGandWRONG1.resources
