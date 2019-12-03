@@ -15,20 +15,20 @@ namespace sys.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = "{0}必填")]
+        [Display(Name = "電話")]
+        public string Tel { get; set; }
+
+        [Required(ErrorMessage = "{0}必填")]
         [Display(Name = "開始時間")]
-        [DataType(DataType.DateTime)]
-        public DateTime StartTime { get; set; }
+        public string StartTime { get; set; }
 
         [Required(ErrorMessage = "{0}必填")]
         [Display(Name = "結束時間")]
-        [DataType(DataType.DateTime)]
-        public DateTime EndTime { get; set; }
+        public string EndTime { get; set; }
 
         [Required(ErrorMessage = "{0}必填")]
         [Display(Name = "備餐時間")]
-        [DataType(DataType.DateTime)]
-        public DateTime PrepareTime { get; set; }
-
+        public int PrepareTime { get; set; }
 
     }
 }

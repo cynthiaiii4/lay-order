@@ -102,3 +102,7 @@ C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.addArea.
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.addcity.resources
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.addMSGandWRONG.resources
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.addMSGandWRONG1.resources
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.adi.resources
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.adjtime.resources
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.adjtime2.resources
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.adddes.resources

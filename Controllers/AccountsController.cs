@@ -18,27 +18,6 @@ namespace sys.Models
     {
         private Membersql db = new Membersql();
 
-        // GET: Accounts/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Account account = db.Accounts.Find(id);
-            if (account == null)
-            {
-                return HttpNotFound();
-            }
-            return View(account);
-        }
-
-        // GET: Accounts/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
         // POST: Accounts/Create
         // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
         // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
@@ -54,8 +33,6 @@ namespace sys.Models
                 {
                     return Content("此電話已存在，請勿重複申請");
                 }
-
-
                 //產生密碼鹽以及密碼加密
                 string salt = Guid.NewGuid().ToString();
                 account.Password = GenerateHashWithSalt(account.Password, salt);
@@ -66,7 +43,6 @@ namespace sys.Models
                 {
                     return Content("fail");
                 }
-
                 account.Vertify = text;
                 //記住總共發過幾次簡訊
                 account.Sent = 1;
@@ -299,62 +275,120 @@ namespace sys.Models
         }
         #endregion
 
-        // GET: Accounts/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Account account = db.Accounts.Find(id);
-            if (account == null)
-            {
-                return HttpNotFound();
-            }
-            return View(account);
-        }
-
-        // POST: Accounts/Edit/5
-        // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
-        // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
+        #region 登入
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Tel,Password,PasswordSalt,Name,Birth,City,Dist,Vertify,Check,IsTable")] Account account)
+        public ActionResult Login(string Tel,string Password)
         {
-            if (ModelState.IsValid)
+            //先對密碼進行加密以利比對
+            Account account =db.Accounts.SingleOrDefault(x=>x.Tel==Tel);
+            Password = GenerateHashWithSalt(Password, account.PasswordSalt);
+            //進行比對
+            if (db.Accounts.Where(x => x.Tel == Tel && x.Password == Password && x.IsCheck==true).Count()>0)
             {
-                db.Entry(account).State = EntityState.Modified;
+                Session["Login"] = true;
+                Session["IsTable"] = account.IsTable;
+                Session["Id"] = account.Id;
+                Session["Tel"] = account.Tel;
+                Session["Name"] = account.Name;
+                return Content("success");
+            }
+            if (db.Accounts.Where(x => x.Tel == Tel && x.Password == Password && x.IsCheck==false).Count() > 0)
+            {
+                return Content("此電話號碼尚未進行驗證");
+            }
+            return Content("登入失敗");
+        }
+        #endregion
+
+        #region 檢查是否登入/GET
+        public ActionResult CheckLogin()
+        {
+            if (Session["Login"] != null)
+            {
+                return Content("True");
+            }
+
+            return Content("False");
+        }
+        #endregion
+
+        #region 內用外帶GET
+        public ActionResult IsTable()
+        {
+            if (Session["IsTable"] != null)
+            {
+                if (Session["IsTable"].ToString() == "True")
+                {
+                    return Content("內用");
+                }
+            }
+            return Content("外帶");
+        }
+
+
+        #endregion
+
+        #region 顯示會員資料GET
+        public ActionResult ShowUser()
+        {
+            if (Session["Id"] == null)
+            {
+                return Content("未登入");
+            }
+            int id = Convert.ToInt32(Session["Id"]);
+            return Content(JsonConvert.SerializeObject(db.Accounts.Where(x=>x.Id==id).Select(x=>new {x.Tel,x.Name,x.Birth,x.City,x.Dist})));
+        }
+        #endregion
+
+        #region 修改會員資料POST
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public ActionResult Edit(string Name, string NewPassword, string Birth, string County, string Dist)
+        {
+            try
+            {
+                if (Session["Id"] == null)
+                {
+                    return Content("未登入");
+                }
+
+                int id = Convert.ToInt32(Session["Id"]);
+                Account account = db.Accounts.Find(id);
+                account.Name = Name;
+                account.Birth = Birth;
+                account.City = County;
+                account.Dist = Dist;
+                if (!string.IsNullOrEmpty(NewPassword))
+                {
+                    string salt = Guid.NewGuid().ToString();
+                    account.Password = GenerateHashWithSalt(account.Password, salt);
+                    account.PasswordSalt = salt;
+                }
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return Content("success");
             }
-            return View(account);
+            catch
+            {
+                return Content("fail");
+            }
         }
 
-        // GET: Accounts/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Account account = db.Accounts.Find(id);
-            if (account == null)
-            {
-                return HttpNotFound();
-            }
-            return View(account);
-        }
 
-        // POST: Accounts/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        #endregion
+
+
+        #region 點餐頁面會員資料GET
+        public ActionResult OrderMember()
         {
-            Account account = db.Accounts.Find(id);
-            db.Accounts.Remove(account);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            if (Session["Id"] == null)
+            {
+                return Content("");
+            }
+            string Tel = Session["Tel"].ToString();
+            string Name = Session["Name"].ToString();
+            return Content(Tel + "," + Name);
         }
+        #endregion
 
         protected override void Dispose(bool disposing)
         {

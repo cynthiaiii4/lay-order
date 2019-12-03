@@ -16,15 +16,6 @@ namespace sys.Controllers
     {
         private Membersql db = new Membersql();
 
-        // GET: Areas
-        //public ActionResult List()
-        //{
-
-        //    List() = db.Areas.ToList();
-        //    return View(db.Areas.ToList());
-        //}
-        // GET: Areas
-
         //GET 
         public ActionResult County()
         {

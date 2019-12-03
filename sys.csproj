@@ -132,7 +132,10 @@
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\MembersController.cs" />
     <Compile Include="Controllers\AreasController.cs" />
+    <Compile Include="Controllers\BannersController.cs" />
+    <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\ContactViewModelsController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Filters\PermissionFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -197,6 +200,22 @@
     <Compile Include="Migrations\201912021025451_addMSGandWRONG1.cs" />
     <Compile Include="Migrations\201912021025451_addMSGandWRONG1.Designer.cs">
       <DependentUpon>201912021025451_addMSGandWRONG1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912030700117_adi.cs" />
+    <Compile Include="Migrations\201912030700117_adi.Designer.cs">
+      <DependentUpon>201912030700117_adi.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912030806091_adjtime.cs" />
+    <Compile Include="Migrations\201912030806091_adjtime.Designer.cs">
+      <DependentUpon>201912030806091_adjtime.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912030806403_adjtime2.cs" />
+    <Compile Include="Migrations\201912030806403_adjtime2.Designer.cs">
+      <DependentUpon>201912030806403_adjtime2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912031308001_adddes.cs" />
+    <Compile Include="Migrations\201912031308001_adddes.Designer.cs">
+      <DependentUpon>201912031308001_adddes.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
@@ -281,6 +300,21 @@
     <Content Include="Views\Areas\Details.cshtml" />
     <Content Include="Views\Areas\Edit.cshtml" />
     <Content Include="Views\Areas\Index.cshtml" />
+    <Content Include="Views\Company\Create.cshtml" />
+    <Content Include="Views\Company\Delete.cshtml" />
+    <Content Include="Views\Company\Details.cshtml" />
+    <Content Include="Views\Company\Edit.cshtml" />
+    <Content Include="Views\Company\Index.cshtml" />
+    <Content Include="Views\Product\Create.cshtml" />
+    <Content Include="Views\Product\Delete.cshtml" />
+    <Content Include="Views\Product\Details.cshtml" />
+    <Content Include="Views\Product\Edit.cshtml" />
+    <Content Include="Views\Product\Index.cshtml" />
+    <Content Include="Views\Banners\Create.cshtml" />
+    <Content Include="Views\Banners\Delete.cshtml" />
+    <Content Include="Views\Banners\Details.cshtml" />
+    <Content Include="Views\Banners\Edit.cshtml" />
+    <Content Include="Views\Banners\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -344,6 +378,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912021025451_addMSGandWRONG1.resx">
       <DependentUpon>201912021025451_addMSGandWRONG1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912030700117_adi.resx">
+      <DependentUpon>201912030700117_adi.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912030806091_adjtime.resx">
+      <DependentUpon>201912030806091_adjtime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912030806403_adjtime2.resx">
+      <DependentUpon>201912030806403_adjtime2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912031308001_adddes.resx">
+      <DependentUpon>201912031308001_adddes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

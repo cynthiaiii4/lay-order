@@ -26,6 +26,10 @@ namespace sys.Models
         public string Name { get; set; }
 
         [Required(ErrorMessage = "{0}必填")]
+        [Display(Name = "產品介紹")]
+        public string Description { get; set; }
+
+        [Required(ErrorMessage = "{0}必填")]
         [Display(Name = "產品價格")]
         public int Price { get; set; }
 
