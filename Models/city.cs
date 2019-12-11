@@ -7,7 +7,7 @@ using System.Web;
 
 namespace sys.Models
 {
-    public class County
+    public class City
     {
         [Key]
         [Required]
@@ -16,6 +16,6 @@ namespace sys.Models
 
         [Display(Name = "城市")]
         [MaxLength(200)]
-        public string City { get; set; }
+        public string County { get; set; }
     }
 }

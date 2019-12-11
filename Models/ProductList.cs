@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json;
 
 namespace sys.Models
 {
@@ -19,6 +20,7 @@ namespace sys.Models
         [Display(Name = "產品類別ID")]
         public int PCid { get; set; }
         [ForeignKey("PCid")]
+        [JsonIgnore]
         public virtual ProductCategory ProductCategory { get; set; }
 
         [Required(ErrorMessage = "{0}必填")]
@@ -48,7 +50,7 @@ namespace sys.Models
 
         [Display(Name = "附餐選項四")]
         public string Sides4 { get; set; }
-
+        [JsonIgnore]
         public  ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

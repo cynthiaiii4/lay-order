@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Diagnostics.Eventing.Reader;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -18,17 +19,17 @@ namespace sys.Models
     {
         private Membersql db = new Membersql();
 
-        // POST: Accounts/Create
-        // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
-        // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
-
-        #region 註冊API
+        #region 20.註冊API/POST
         [HttpPost]
         //[ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Tel,Password,PasswordSalt,Name,Birth,City,Dist,Vertify,Check,IsTable")] Account account)
         {
             try
             {
+                if (System.Text.RegularExpressions.Regex.IsMatch(account.Tel, @"^09[0-9]{8}$")==false)
+                {
+                    return Content("非手機電話號碼");
+                }
                 if (db.Accounts.Where(x => x.Tel == account.Tel).Count() > 0)
                 {
                     return Content("此電話已存在，請勿重複申請");
@@ -52,25 +53,9 @@ namespace sys.Models
                 db.SaveChanges();
                 //存註冊ID給驗證API用
                 //Session["RegisteredId"] = account.Id.ToString();
-                HttpCookie RegisteredId = new HttpCookie("RegisteredId");
-                RegisteredId.Value= account.Id.ToString();
-                Response.Cookies.Add(RegisteredId);
-                //存註冊電話給重新寄發簡訊用
-                //Session["RegisteredTel"] = account.Tel;
-                //HttpCookie RegisteredTel = new HttpCookie("RegisteredTel");
-                //RegisteredTel.Value = account.Tel;
-                //Response.Cookies.Add(RegisteredTel);
-                //記住總共發過幾次簡訊
-                //Session["RegisteredSend"] =1;
-                //HttpCookie RegisteredSend = new HttpCookie("RegisteredSend");
-                //RegisteredSend.Value = 1.ToString();
-                //Response.Cookies.Add(RegisteredSend);
-                //驗證次數預設0
-                //Session["RegisteredFail"] = 0;
-                //HttpCookie RegisteredFail = new HttpCookie("RegisteredFail");
-                //RegisteredFail.Value = 0.ToString();
-                //Response.Cookies.Add(RegisteredFail);
-                
+                //HttpCookie RegisteredId = new HttpCookie("RegisteredId");
+                //RegisteredId.Value= account.Id.ToString();
+                //Response.Cookies.Add(RegisteredId);
                 return Content("success");
             }
             catch(Exception)
@@ -133,7 +118,6 @@ namespace sys.Models
                 {
                     text = sr.ReadToEnd();
                 }
-
                 return text;
             }
             catch (Exception)
@@ -143,52 +127,35 @@ namespace sys.Models
         }
 
         #endregion
-
-
         #endregion
 
-        #region 確認驗證碼
-        public ActionResult Vertify(string Vertify)
+        #region 18.確認驗證碼POST
+        public ActionResult Vertify(string Vertify,string Tel)
         {
-            HttpCookie RegisteredId = Request.Cookies["RegisteredId"];
-            int id = Convert.ToInt32(RegisteredId.Value);
-            //int id = Convert.ToInt32(Session["RegisteredId"]);
-            //Account account = db.Accounts.Find(Convert.ToInt32(RegisteredId.Value));
-            Account account = db.Accounts.Find(id);
-            //if (Request.Cookies["RegisteredFail"] == null)
-            //{
-            //    HttpCookie RegisteredFail2 = new HttpCookie("RegisteredFail");
-            //    RegisteredFail2.Value = 0.ToString();
-            //    Response.Cookies.Add(RegisteredFail2);
-            //}
-
-            //HttpCookie RegisteredFail = Request.Cookies["RegisteredFail"];
-            if (db.Accounts.Where(x => x.Id == id && x.Vertify == Vertify).Count() > 0)
+            //HttpCookie RegisteredId = Request.Cookies["RegisteredId"];
+            //int id = Convert.ToInt32(RegisteredId.Value);
+            
+            //Account account = db.Accounts.Find(id);
+            Account account = db.Accounts.Where(x => x.Tel == Tel).FirstOrDefault();
+            
+            if (db.Accounts.Where(x => x.Tel==Tel && x.Vertify == Vertify).Count() > 0)
             {
                 account.IsCheck = true;
                 account.Sent = 0;
                 account.wrong = 0;
                 db.SaveChanges();
-                return Content("success");
+                Session["Id"] = account.Id;
+                return Content(account.Id.ToString());
             }
             else
             {
-                //RegisteredFail.Value = (Convert.ToInt32(RegisteredFail.Value) + 1).ToString();
-                //Response.Cookies.Add(RegisteredFail);
-                //int fail = Convert.ToInt32(Session["RegisteredFail"]);
+                
                 int fail = account.wrong;
                 fail = fail + 1;
-                //Session["RegisteredFail"] = fail;
                 account.wrong = fail;
-                //if (RegisteredFail.Value == "3")
                 if (fail==3)
                 {
                     account.Vertify = 0.ToString();
-                    //db.SaveChanges();
-                    //RegisteredFail.Value = 0.ToString();
-                    //Response.Cookies.Add(RegisteredFail);
-                    //fail = 0;
-                    //Session["RegisteredFail"] = fail;
                     account.wrong = 0;
                     db.SaveChanges();
                     return Content("驗證碼輸入失敗3次，請重新取得驗證碼");
@@ -200,28 +167,17 @@ namespace sys.Models
         }
         #endregion
 
-        #region 重新寄發驗證碼
-        public ActionResult ReSendSMS()
+        #region 19.重新寄發驗證碼GET
+        public ActionResult ReSendSMS(string Tel)
         {
             try
             {
-                    HttpCookie RegisteredId = Request.Cookies["RegisteredId"];
-                //    HttpCookie RegisteredTel = Request.Cookies["RegisteredTel"];
-                //    HttpCookie RegisteredSend = Request.Cookies["RegisteredSend"];
-                //    Account account = db.Accounts.Find(Convert.ToInt32(RegisteredId.Value));
-                //    if (RegisteredSend.Value == "3")
-                //    {
-                //        return Content("已寄發3次驗證碼，請您再次確認電話是否正確");
-                //    }
-                //int id = Convert.ToInt32(Session["RegisteredId"]);
-                //int sent = Convert.ToInt32(Session["RegisteredSend"]);
-                
-                int id = Convert.ToInt32(RegisteredId.Value);
-                Account account = db.Accounts.Find(id);
-                int sent = account.Sent;
-                //Account account = db.Accounts.Find(Convert.ToInt32(RegisteredId.Value));
+                //HttpCookie RegisteredId = Request.Cookies["RegisteredId"];
+                //int id = Convert.ToInt32(RegisteredId.Value);
                 //Account account = db.Accounts.Find(id);
-                //if (RegisteredSend.Value == "3")
+                Account account = db.Accounts.Where(x => x.Tel == Tel).FirstOrDefault();
+                int sent = account.Sent;
+                
                 if (sent == 3)
                 {
                     return Content("已寄發3次驗證碼，請您再次確認電話是否正確");
@@ -233,9 +189,6 @@ namespace sys.Models
                 //組成簡訊內容並寄發
                 string msg = "你好，您在lay-order的帳號驗證碼為" + vertify + "。請於驗證頁面輸入";
                 msg = HttpUtility.UrlEncode(msg);
-                //string url =
-                //    "http://api.every8d.com/API21/HTTP/sendSMS.ashx?UID=0932961027&PWD=layorder&SB=vertify&MSG=" + msg +
-                //    "&DEST=" +Session["RegisteredTel"] + "&ST=";
                 string url =
                     "http://api.every8d.com/API21/HTTP/sendSMS.ashx?UID=0932961027&PWD=layorder&SB=vertify&MSG=" + msg +
                     "&DEST=" + account.Tel + "&ST=";
@@ -250,10 +203,6 @@ namespace sys.Models
                     account.Vertify = vertify.ToString();
                     account.Sent = sent + 1;
                     db.SaveChanges();
-                    //RegisteredSend.Value = (Convert.ToInt32(RegisteredSend.Value) + 1).ToString();
-                    //Response.Cookies.Add(RegisteredSend);
-                    //sent = sent + 1;
-                    //Session["RegisteredSend"] = sent;
                     return Content("success");
                 }
             }
@@ -263,11 +212,9 @@ namespace sys.Models
             }
            
         }
-
-
         #endregion
 
-        #region 優惠劵
+        #region 優惠劵GET
         public ActionResult Voucher()
         {
             DateTime now= DateTime.UtcNow.AddHours(08);
@@ -275,17 +222,20 @@ namespace sys.Models
         }
         #endregion
 
-        #region 登入
+        #region 登入POST
         [HttpPost]
         public ActionResult Login(string Tel,string Password)
         {
-            //先對密碼進行加密以利比對
             Account account =db.Accounts.SingleOrDefault(x=>x.Tel==Tel);
+            if (account == null)
+            {
+                return Content("此帳號不存在");
+            }
             Password = GenerateHashWithSalt(Password, account.PasswordSalt);
             //進行比對
             if (db.Accounts.Where(x => x.Tel == Tel && x.Password == Password && x.IsCheck==true).Count()>0)
             {
-                Session["Login"] = true;
+                //Session["Login"] = true;
                 Session["IsTable"] = account.IsTable;
                 Session["Id"] = account.Id;
                 Session["Tel"] = account.Tel;
@@ -303,7 +253,7 @@ namespace sys.Models
         #region 檢查是否登入/GET
         public ActionResult CheckLogin()
         {
-            if (Session["Login"] != null)
+            if (Session["Id"] != null)
             {
                 return Content("True");
             }
@@ -336,7 +286,7 @@ namespace sys.Models
                 return Content("未登入");
             }
             int id = Convert.ToInt32(Session["Id"]);
-            return Content(JsonConvert.SerializeObject(db.Accounts.Where(x=>x.Id==id).Select(x=>new {x.Tel,x.Name,x.Birth,x.City,x.Dist})));
+            return Content(JsonConvert.SerializeObject(db.Accounts.Where(x=>x.Id==id).Select(x=>new {x.Tel,x.Name,x.Birth,x.County,x.Dist})));
         }
         #endregion
 
@@ -356,12 +306,12 @@ namespace sys.Models
                 Account account = db.Accounts.Find(id);
                 account.Name = Name;
                 account.Birth = Birth;
-                account.City = County;
+                account.County = County;
                 account.Dist = Dist;
                 if (!string.IsNullOrEmpty(NewPassword))
                 {
                     string salt = Guid.NewGuid().ToString();
-                    account.Password = GenerateHashWithSalt(account.Password, salt);
+                    account.Password = GenerateHashWithSalt(NewPassword, salt);
                     account.PasswordSalt = salt;
                 }
                 db.SaveChanges();
@@ -376,7 +326,6 @@ namespace sys.Models
 
         #endregion
 
-
         #region 點餐頁面會員資料GET
         public ActionResult OrderMember()
         {
@@ -390,6 +339,106 @@ namespace sys.Models
         }
         #endregion
 
+        #region 37.員工登入POST
+
+        [HttpPost]
+        public ActionResult EmployeeLogin(string id, string Password)
+        {
+            Member member = db.Members.FirstOrDefault(x => x.Account == id && x.Password == Password);
+            if (member != null)
+            {
+                Session["EmployeeID"] = id;
+                return Content("success");
+            }
+            return Content("fail");
+        }
+
+        #endregion
+
+        #region 26.忘記密碼後修改密碼
+        [HttpPost]
+        public ActionResult EditPassword(int Id, string Password)
+        {
+            try
+            {
+                Account account = db.Accounts.Find(Id);
+                string salt = Guid.NewGuid().ToString();
+                account.Password = GenerateHashWithSalt(Password, salt);
+                account.PasswordSalt = salt;
+                db.SaveChanges();
+                return Content("succcess");
+            }
+            catch (Exception e)
+            {
+                return Content("fail");
+            }
+           
+        }
+
+
+        #endregion
+
+        #region 29.機器人
+        [HttpPost]
+        public ActionResult Robot(string hiddenToken)
+        {
+            string token = hiddenToken;
+            string tokencContent = PostJsonContent(token);
+            //取得隱藏欄位token
+            ResponseToken responseToken = JsonConvert.DeserializeObject<ResponseToken>(tokencContent);
+            Session["verification"] = responseToken.success;
+            if (responseToken.success != true)
+            {
+                return Content("機器人來襲");
+            }
+
+            return Content("success");
+        }
+        private static string PostJsonContent(string token)
+        {
+            string key = "6LexvsYUAAAAAB3gHcOyidlTpBMe4rszImHdAc4G";
+            try
+            {
+                WebRequest request = HttpWebRequest.Create("https://www.google.com/recaptcha/api/siteverify");
+                request.Method = "POST";
+                //使用 application/x-www-form-urlencoded
+                request.ContentType = "application/x-www-form-urlencoded; charset=utf-8";
+
+                //要傳送的資料內容(依字串表示)
+                string postData = $"secret=6LexvsYUAAAAAB3gHcOyidlTpBMe4rszImHdAc4G&response={token}";
+                //將傳送的字串轉為 byte array
+                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                //告訴 server content 的長度
+                request.ContentLength = byteArray.Length;
+                //將 byte array 寫到 request stream 中 
+                using (Stream reqStream = request.GetRequestStream())
+                {
+                    reqStream.Write(byteArray, 0, byteArray.Length);
+                }
+                using (var httpResponse = (HttpWebResponse)request.GetResponse())
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    return result;
+                }
+
+            }
+
+            catch (Exception)
+            {
+                return string.Empty;
+            }
+        }
+
+        public class ResponseToken
+        {
+            public DateTime challenge_ts { get; set; }
+            public float score { get; set; }
+            public string action { get; set; }
+            public bool success { get; set; }
+            public string hostname { get; set; }
+        }
+        #endregion
         protected override void Dispose(bool disposing)
         {
             if (disposing)

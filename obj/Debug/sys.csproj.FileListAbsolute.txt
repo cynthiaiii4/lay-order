@@ -96,7 +96,6 @@ C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.addicon.
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.addtables.resources
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.addrelationship.resources
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.adjvertify.resources
-C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.csprojAssemblyReference.cache
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.adjcheckname.resources
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.addArea.resources
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.addcity.resources
@@ -106,3 +105,13 @@ C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.adi.reso
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.adjtime.resources
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.adjtime2.resources
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.adddes.resources
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.adjR.resources
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.adjR1.resources
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.adjord.resources
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.adjrequire.resources
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.adjoption.resources
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.addbigQty.resources
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\bin\MvcPaging.dll
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\bin\zh-Hant\EntityFramework.SqlServer.resources.dll
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.csprojAssemblyReference.cache
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.adjcity.resources

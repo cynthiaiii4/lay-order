@@ -30,7 +30,7 @@ namespace sys.Models
         [DataType(DataType.DateTime)]
         public DateTime GetTime { get; set; }
 
-        [Required(ErrorMessage = "{0}必填")]
+        
         [Display(Name = "狀態")]
         public string Status { get; set; }
 

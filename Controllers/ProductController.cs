@@ -18,41 +18,35 @@ namespace sys.Controllers
         #region 取得類別GET
         public ActionResult GetCategory()
         {
-            return Content(JsonConvert.SerializeObject(db.ProductCategoryList.Select(x => x.PCName).ToList()));
+            return Content(JsonConvert.SerializeObject(db.ProductCategoryList.Select(x => new
+            {
+                x.Id,
+                x.PCName
+            })));
         }
         #endregion
 
         #region 取得商品列表GET
-
-        public ActionResult GetProduct(string type)
+        public ActionResult GetProduct(int? PCid)
         {
-            int PCid = 0;
-            if (type == "all") 
+            var result= db.ProductLists.Select(x => new { x.Id, x.Img, x.Name, x.Price,x.PCid });
+            if (PCid != null)
             {
-                return Content(JsonConvert.SerializeObject(db.ProductLists.Select(x => new { x.Id, x.Img, x.Name, x.Price}).ToList()));
+                result=result.Where(x => x.PCid == PCid);
             }
-            switch (type)
-            {
-                case "rice":
-                    PCid = 1;
-                    break;
-                case "noodle":
-                    PCid = 2;
-                    break;
-                case "soup":
-                    PCid = 3;
-                    break;
-                case "drink":
-                    PCid = 4;
-                    break;
-            }
-
-            return Content(JsonConvert.SerializeObject(db.ProductLists.Where(x=>x.PCid==PCid).Select(x=>new {x.Id,x.Img,x.Name,x.Price}).ToList()));
+            return Content(JsonConvert.SerializeObject(result));
         }
-        
-
         #endregion
 
+        #region 取得單品細節GET
+
+        public ActionResult GetProductDetail(int id)
+        {
+            return Content(JsonConvert.SerializeObject(db.ProductLists.Where(x => x.Id==id)));
+            //return Content(JsonConvert.SerializeObject(db.ProductLists.Where(x => x.Id == id).Select(x=>new {x.Id,x.Name,x.Img,x.Description,x.Price,x.Sides1,x.Sides2,x.Sides3,x.Sides4})));
+        }
+
+        #endregion
 
         // GET: ProductLists
         public ActionResult Index()

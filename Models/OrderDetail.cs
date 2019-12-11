@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json;
 
 namespace sys.Models
 {
@@ -18,16 +19,17 @@ namespace sys.Models
         [Required(ErrorMessage = "{0}必填")]
         [Display(Name = "訂單編號")]
         public int Oid { get; set; }
+        [JsonIgnore]
         [ForeignKey("Oid")]
         public virtual  Order order { get; set; }
 
         [Required(ErrorMessage = "{0}必填")]
         [Display(Name = "產品ID")]
         public int Pid { get; set; }
+        [JsonIgnore]
         [ForeignKey("Pid")]
         public virtual ProductList ProductList { get; set; }
 
-        [Required(ErrorMessage = "{0}必填")]
         [Display(Name = "附餐選項")]
         public string Options { get; set; }
 
@@ -36,7 +38,19 @@ namespace sys.Models
         public int Qty { get; set; }
 
         [Required(ErrorMessage = "{0}必填")]
+        [Display(Name = "單品金額")]
+        public int Price { get; set; }
+
         [Display(Name = "單品狀態")]
         public string Status { get; set; }
+    }
+
+    //訂單傳送型別
+    public class OrderContent
+    {
+        public int Pid { get; set; }
+        public string Options { get; set; }
+        public int Qty { get; set; }
+        public string time { get; set; }
     }
 }

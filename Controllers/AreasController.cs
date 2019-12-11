@@ -19,7 +19,7 @@ namespace sys.Controllers
         //GET 
         public ActionResult County()
         {
-            return Content(JsonConvert.SerializeObject(db.City.Select(x=>x.City).ToList()));
+            return Content(JsonConvert.SerializeObject(db.City.Select(x=>x.County)));
         }
         //GET
         public ActionResult Town(string county)

@@ -42,15 +42,20 @@ namespace sys.Controllers
 
         public ActionResult PreTime()
         {
-            int id = db.CompanySet.Count();
-            Company company = db.CompanySet.Find(id);
-            string time = company.PrepareTime.ToString();
-            return Content(time);
+            int preTime = db.CompanySet.OrderByDescending(x => x.Id).FirstOrDefault().PrepareTime;
+            return Content(preTime.ToString());
         }
 
         #endregion
-        
 
+        #region 店家電話
+
+        public ActionResult GetTel()
+        {
+            return Content(db.CompanySet.OrderByDescending(x => x.Id).FirstOrDefault().Tel);
+        }
+
+        #endregion
         protected override void Dispose(bool disposing)
         {
             if (disposing)

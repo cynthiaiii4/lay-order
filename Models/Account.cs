@@ -21,6 +21,7 @@ namespace sys.Models
         public string Tel { get; set; }
         public ICollection<Order> Orders { get; set; }
 
+        [Required(ErrorMessage = "{0}必填")]
         [DataType(DataType.Password)]
         [Display(Name = "密碼")]
         public string Password { get; set; }
@@ -41,7 +42,7 @@ namespace sys.Models
 
         [Display(Name = "城市")]
         [MaxLength(200)]
-        public string City { get; set; }
+        public string County { get; set; }
 
         [Display(Name = "區域")]
         [MaxLength(200)]

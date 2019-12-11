@@ -27,6 +27,10 @@ namespace sys.Models
         public string EndTime { get; set; }
 
         [Required(ErrorMessage = "{0}必填")]
+        [Display(Name = "大單數量設定")]
+        public int BigQty { get; set; }
+
+        [Required(ErrorMessage = "{0}必填")]
         [Display(Name = "備餐時間")]
         public int PrepareTime { get; set; }
 

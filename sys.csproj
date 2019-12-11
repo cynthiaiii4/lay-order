@@ -52,6 +52,9 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MvcPaging, Version=2.1.13.46, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvcPaging.2.1.13\lib\net40\MvcPaging.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -135,6 +138,8 @@
     <Compile Include="Controllers\BannersController.cs" />
     <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\ContactViewModelsController.cs" />
+    <Compile Include="Controllers\KitchenController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Filters\PermissionFilter.cs" />
     <Compile Include="Global.asax.cs">
@@ -217,13 +222,41 @@
     <Compile Include="Migrations\201912031308001_adddes.Designer.cs">
       <DependentUpon>201912031308001_adddes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912051025012_adjR.cs" />
+    <Compile Include="Migrations\201912051025012_adjR.Designer.cs">
+      <DependentUpon>201912051025012_adjR.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912051049012_adjR1.cs" />
+    <Compile Include="Migrations\201912051049012_adjR1.Designer.cs">
+      <DependentUpon>201912051049012_adjR1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912060346418_adjord.cs" />
+    <Compile Include="Migrations\201912060346418_adjord.Designer.cs">
+      <DependentUpon>201912060346418_adjord.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912060900546_adjrequire.cs" />
+    <Compile Include="Migrations\201912060900546_adjrequire.Designer.cs">
+      <DependentUpon>201912060900546_adjrequire.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912080342058_adjoption.cs" />
+    <Compile Include="Migrations\201912080342058_adjoption.Designer.cs">
+      <DependentUpon>201912080342058_adjoption.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912090504141_addbigQty.cs" />
+    <Compile Include="Migrations\201912090504141_addbigQty.Designer.cs">
+      <DependentUpon>201912090504141_addbigQty.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912110517200_adjcity.cs" />
+    <Compile Include="Migrations\201912110517200_adjcity.Designer.cs">
+      <DependentUpon>201912110517200_adjcity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
     <Compile Include="Models\Banner.cs" />
     <Compile Include="Models\Company.cs" />
     <Compile Include="Models\ContactViewModel.cs" />
-    <Compile Include="Models\County.cs" />
+    <Compile Include="Models\City.cs" />
     <Compile Include="Models\EnumList.cs" />
     <Compile Include="Models\GovArea.cs" />
     <Compile Include="Models\holiday.cs" />
@@ -315,6 +348,16 @@
     <Content Include="Views\Banners\Details.cshtml" />
     <Content Include="Views\Banners\Edit.cshtml" />
     <Content Include="Views\Banners\Index.cshtml" />
+    <Content Include="Views\Order\Create.cshtml" />
+    <Content Include="Views\Order\Delete.cshtml" />
+    <Content Include="Views\Order\Details.cshtml" />
+    <Content Include="Views\Order\Edit.cshtml" />
+    <Content Include="Views\Order\Index.cshtml" />
+    <Content Include="Views\Kitchen\Create.cshtml" />
+    <Content Include="Views\Kitchen\Delete.cshtml" />
+    <Content Include="Views\Kitchen\Details.cshtml" />
+    <Content Include="Views\Kitchen\Edit.cshtml" />
+    <Content Include="Views\Kitchen\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -390,6 +433,27 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912031308001_adddes.resx">
       <DependentUpon>201912031308001_adddes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912051025012_adjR.resx">
+      <DependentUpon>201912051025012_adjR.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912051049012_adjR1.resx">
+      <DependentUpon>201912051049012_adjR1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912060346418_adjord.resx">
+      <DependentUpon>201912060346418_adjord.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912060900546_adjrequire.resx">
+      <DependentUpon>201912060900546_adjrequire.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912080342058_adjoption.resx">
+      <DependentUpon>201912080342058_adjoption.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912090504141_addbigQty.resx">
+      <DependentUpon>201912090504141_addbigQty.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912110517200_adjcity.resx">
+      <DependentUpon>201912110517200_adjcity.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -42,7 +42,7 @@ namespace sys.Areas.Admin.Controllers
             //GUID寫法
             //string guid = Guid.NewGuid().ToString();
         }
-
+        //JObject
         public ActionResult GetJson1()
         {
             //當要串成不規則的json給別人時使用
