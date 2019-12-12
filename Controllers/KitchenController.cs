@@ -63,6 +63,10 @@ namespace sys.Controllers
             if (!string.IsNullOrEmpty(status))
             {
                 result = result.Where(x => x.status == status);
+                if (status == "done")
+                {
+                    result = result.OrderByDescending(x => x.gettime);
+                }
             }
             var finalResult=result.OrderBy(x=>x.gettime).ToPagedList(page, PageSize);
             return Content(JsonConvert.SerializeObject(finalResult));
@@ -102,7 +106,7 @@ namespace sys.Controllers
                     return Content("fail");
                 }
                 OrderDetail orderDetail = db.OrderDetails.Find(id);
-                orderDetail.Status = "done";
+                orderDetail.Status = "ready";
                 db.SaveChanges();
                 return Content("success");
             }
@@ -112,9 +116,6 @@ namespace sys.Controllers
             }
         }
         #endregion
-
-
-
 
         // GET: Kitchen
         public ActionResult Index()

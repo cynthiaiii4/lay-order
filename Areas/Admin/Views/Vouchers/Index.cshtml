@@ -1,0 +1,74 @@
+﻿@model IEnumerable<sys.Models.Voucher>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StartTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EndTime)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndTime)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @*<form action="/Admin/Vouchers/Delete" id="delete@(item.Id)"><a href="javascript:document.getElementById('delete@(item.Id)').submit();" OnClientClick="javascript:if(!window.confirm('你確定要刪除嗎?')) window.event.returnValue = false;">刪除</a><input type="hidden" name="id" value=@item.Id ></form>*@
+                <form action="/Admin/Vouchers/Delete" method="post">
+                    <a>刪除</a>
+                    <input type="hidden" name="id" value=@item.Id>
+                </form>
+                <script>
+                    //function post(id) {
+                    //    if (!window.confirm('你確定要刪除嗎?'))
+                    //        window.event.returnValue = false;
+                    //    document.getElementByTagName(id).submit();
+
+                    //}
+                    var form = document.querySelectorAll('form');
+                    form.forEach(item => {
+                        item.addEventListener("click",
+                            function () {
+                                if (!window.confirm('你確定要刪除嗎?'))
+                                    return;
+                                else {
+                                    this.submit();
+                                }
+                            });
+                    });
+                </script>
+            </td>
+        </tr>
+    }
+
+</table>
