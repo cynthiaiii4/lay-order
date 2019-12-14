@@ -71,10 +71,6 @@ namespace sys.Areas.Admin.Controllers
             ViewBag.Img = banner.Img;
             ViewBag.StartTime = banner.StartTime.ToString("yyyy-MM-dd");
             ViewBag.EndTime = banner.EndTime.ToString("yyyy-MM-dd");
-            if (banner == null)
-            {
-                return HttpNotFound();
-            }
             return View(banner);
         }
 
@@ -83,46 +79,39 @@ namespace sys.Areas.Admin.Controllers
         // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Img,StartTime,EndTime")] Banner banner, HttpPostedFileBase Img)
+        public ActionResult Edit([Bind(Include = "Id,Name,Img,StartTime,EndTime")] Banner banner, HttpPostedFileBase NewImg)
         {
+            //ModelState.Remove("Img");
             if (ModelState.IsValid)
             {
-                if (Img != null)
+                if (banner.StartTime>banner.EndTime)
                 {
-                    if (Img.ContentType.IndexOf("image", System.StringComparison.Ordinal) == -1)
+                    ViewBag.Message = "開始日期不得大於結束日期!";
+                    return View(banner);
+                }
+                if (NewImg != null)
+                {
+                    if (NewImg.ContentType.IndexOf("image", System.StringComparison.Ordinal) == -1)
                     {
                         ViewBag.Message = "檔案型態錯誤!";
                         return View(banner);
                     }
                     //取得副檔名
-                    string extension = Path.GetExtension(Img.FileName);
+                    string extension = Path.GetExtension(NewImg.FileName);
                     //新檔案名稱
                     string fileName = String.Format("{0:yyyyMMddhhmmsss}.{1}", DateTime.Now, extension);
                     string savedName = Path.Combine(Server.MapPath("/Img/BannerImg"), fileName);
-                    Img.SaveAs(savedName);
+                    NewImg.SaveAs(savedName);
                     banner.Img = fileName;
                 }
+
                 db.Entry(banner).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(banner);
+            return RedirectToAction("Index");
         }
 
-        // GET: Admin/BKBanners/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Banner banner = db.Banners.Find(id);
-            if (banner == null)
-            {
-                return HttpNotFound();
-            }
-            return View(banner);
-        }
 
         // POST: Admin/BKBanners/Delete/5
         [HttpPost, ActionName("Delete")]

@@ -151,9 +151,11 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\BKBannersController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BKCompanyController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\MembersController.cs" />
     <Compile Include="Areas\Admin\Controllers\VouchersController.cs" />
+    <Compile Include="Areas\Admin\ViewModel\BKCompanyViewModel.cs" />
     <Compile Include="ChatHub.cs" />
     <Compile Include="Controllers\AreasController.cs" />
     <Compile Include="Controllers\BannersController.cs" />
@@ -323,6 +325,8 @@
     <Content Include="Areas\Admin\Views\BKBanners\Create.cshtml" />
     <Content Include="Areas\Admin\Views\BKBanners\Index.cshtml" />
     <Content Include="Areas\Admin\Views\BKBanners\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\BKCompany\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\BKCompany\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

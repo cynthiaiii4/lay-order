@@ -49,12 +49,6 @@
                     <input type="hidden" name="id" value=@item.Id>
                 </form>
                 <script>
-                    //function post(id) {
-                    //    if (!window.confirm('你確定要刪除嗎?'))
-                    //        window.event.returnValue = false;
-                    //    document.getElementByTagName(id).submit();
-
-                    //}
                     var form = document.querySelectorAll('form');
                     form.forEach(item => {
                         item.addEventListener("click",

@@ -15,8 +15,8 @@ namespace sys.Controllers
     public class KitchenController : Controller
     {
         private Membersql db = new Membersql();
-        #region 34.顯示待處理訂單GET
-        public ActionResult ShowOrderList(string type, string status,int page)
+        #region 35.顯示待處理訂單GET
+        public ActionResult ShowOrderList(string type, string status, int page)
         {
             if (Session["EmployeeID"] == null)
             {
@@ -56,26 +56,30 @@ namespace sys.Controllers
                 result = result.Where(x => x.isTable == isTable);
                 if (type == "big")
                 {
-                    int qty = db.CompanySet.OrderByDescending(z=>z.Id).FirstOrDefault().BigQty;
-                    result = result.Where(x=>x.totalQty>qty);
+                    int qty = db.CompanySet.OrderByDescending(z => z.Id).FirstOrDefault().BigQty;
+                    result = result.Where(x => x.totalQty > qty);
                 }
             }
             if (!string.IsNullOrEmpty(status))
             {
                 result = result.Where(x => x.status == status);
-                if (status == "done")
+                if (status == "ready")
                 {
                     result = result.OrderByDescending(x => x.gettime);
                 }
             }
-            var finalResult=result.OrderBy(x=>x.gettime).ToPagedList(page, PageSize);
+            else
+            {
+                result = result.Where(x => x.status == "prepare");
+            }
+            var finalResult = result.OrderBy(x => x.gettime).ToPagedList(page, PageSize);
             return Content(JsonConvert.SerializeObject(finalResult));
         }
 
 
         #endregion
 
-        #region 35訂單完成GET
+        #region 36訂單完成GET
         public ActionResult CompleteOrder(int id)
         {
             try
@@ -85,7 +89,18 @@ namespace sys.Controllers
                     return Content("fail");
                 }
                 Order order = db.Orders.Find(id);
-                order.Status = "done";
+                if (order.Status != "done")
+                {
+                    order.Status = "ready";
+                }
+                List<OrderDetail> orderDetail = db.OrderDetails.Where(x => x.Oid == id).ToList();
+                foreach (var item in orderDetail)
+                {
+                    if (item.Status == "prepare")
+                    {
+                        item.Status = "ready";
+                    }
+                }
                 db.SaveChanges();
                 return Content("success");
             }
@@ -97,16 +112,21 @@ namespace sys.Controllers
         #endregion
 
         #region 36單品完成GET
-        public ActionResult CompleteOrderItem(int id)
+        public ActionResult CompleteOrderItem(int Oid, int id)
         {
             try
             {
-                if (Session["EmployeeID"]==null)
+                if (Session["EmployeeID"] == null)
                 {
                     return Content("fail");
                 }
                 OrderDetail orderDetail = db.OrderDetails.Find(id);
                 orderDetail.Status = "ready";
+                Order order = db.Orders.Find(Oid);
+                if (orderDetail.Status!="done")
+                {
+                    order.Status = "ready";
+                }
                 db.SaveChanges();
                 return Content("success");
             }
@@ -114,6 +134,55 @@ namespace sys.Controllers
             {
                 return Content("fail");
             }
+        }
+        #endregion
+
+        #region 39.總頁數GET
+        public ActionResult TotalPage(string type, string status)
+        {
+            if (Session["EmployeeID"] == null)
+            {
+                return Content("未登入");
+            }
+
+            var result = db.Orders.Select(x => new
+            {
+                isTable = x.Account.IsTable,
+                gettime = x.GetTime,
+                status = x.Status,
+                totalQty = x.OrderDetails.Sum(w => w.Qty),
+            });
+
+            bool isTable = false;
+            if (type == "forhere")
+            {
+                isTable = true;
+            }
+
+            if (!string.IsNullOrEmpty(type))
+            {
+                result = result.Where(x => x.isTable == isTable);
+                if (type == "big")
+                {
+                    int qty = db.CompanySet.OrderByDescending(z => z.Id).FirstOrDefault().BigQty;
+                    result = result.Where(x => x.totalQty > qty);
+                }
+            }
+            if (!string.IsNullOrEmpty(status))
+            {
+                result = result.Where(x => x.status == status);
+                if (status == "ready")
+                {
+                    result = result.OrderByDescending(x => x.gettime);
+                }
+            }
+            else
+            {
+                result = result.Where(x => x.status == "prepare");
+            }
+            int page = result.Count();
+            page = (page / 4) + 1;
+            return Content(page.ToString());
         }
         #endregion
 

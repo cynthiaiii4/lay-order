@@ -17,6 +17,7 @@ namespace sys.Controllers
         #region 是否營業GET
         public ActionResult IsOpen()
         {
+
             DateTime today = DateTime.UtcNow.AddHours(23);
             if (db.holiday.Where(x => x.EndTime > today && x.StartTime < today).Count() > 0)
             {
@@ -27,8 +28,8 @@ namespace sys.Controllers
             DateTime date = DateTime.Today.AddHours(23);
             string startTime = date.ToString("yyyy-MM-dd") + " " + company.StartTime;
             string endTime = date.ToString("yyyy-MM-dd") + " " + company.EndTime;
-            DateTime start = Convert.ToDateTime(startTime);
-            DateTime end = Convert.ToDateTime(endTime);
+            DateTime start = Convert.ToDateTime(startTime).AddHours(23);
+            DateTime end = Convert.ToDateTime(endTime).AddHours(23);
 
             if (start < today && end > today)
             {

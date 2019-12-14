@@ -19,7 +19,7 @@ namespace sys.Models
         public string Name { get; set; }
 
         [Required(ErrorMessage = "{0}必填")]
-        [Display(Name = "Bannerw圖片")]
+        [Display(Name = "Banner圖片")]
         public string Img { get; set; }
 
         [Required(ErrorMessage = "{0}必填")]

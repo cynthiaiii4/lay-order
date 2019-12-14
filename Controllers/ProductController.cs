@@ -15,12 +15,12 @@ namespace sys.Controllers
     {
         private Membersql db = new Membersql();
 
-        #region 取得類別GET
+        #region 6.取得類別GET
         public ActionResult GetCategory()
         {
             return Content(JsonConvert.SerializeObject(db.ProductCategoryList.Select(x => new
             {
-                x.Id,
+                PCid=x.Id,
                 x.PCName
             })));
         }
