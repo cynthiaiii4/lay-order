@@ -45,6 +45,7 @@
 
         public virtual DbSet<Area> Areas { get; set; }
         public virtual DbSet<City> City { get; set; }
+        public virtual DbSet<ProductImg> ProductImg { get; set; }
 
         //騙精靈寫程式要記得砍掉
         //public virtual DbSet<ContactViewModel> ContactViewModel { get; set; }

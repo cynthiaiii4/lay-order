@@ -1,10 +1,12 @@
-﻿@model sys.Areas.Admin.ViewModel.BKCompanyViewModel
+﻿@using sys.Models
+@model sys.Areas.Admin.ViewModel.BKCompanyViewModel
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "調整營業設定";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    IEnumerable<holiday> holiday = ViewBag.holiday;
 }
 
-<h2>Index</h2>
+
 
 @using (Html.BeginForm("Edit","BKCompany"))
 {
@@ -14,7 +16,7 @@
 
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
+       
         <div class="form-group">
             @Html.LabelFor(model => model.Tel, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -71,13 +73,14 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <label for="HolidayStartTime">假期開始時間</label>
-        <input type="datetime-local" name="HolidayStartTime" id="HolidayStartTime">
+        <input type="datetime-local" name="StartTime" id="HolidayStartTime" required="">
 
         <label for="HolidayEndTime">
             假期結束時間
         </label>
-        <input type="datetime-local" name="HolidayEndTime" id="HolidayEndTime">
-<input type="submit" value="新增" class="btn btn-default" />
+        <input type="datetime-local" name="EndTime" id="HolidayEndTime" required="">
+        <input type="submit" value="新增" class="btn btn-default" />
+        @ViewBag.Alert
     </div>
 }
         @using (Html.BeginForm("Delete","BKCompany"))
@@ -86,15 +89,15 @@
                 <tr>
                     <th></th>
                     <th>
-                        @Html.DisplayNameFor(model => model.HolidayStartTime)
+                        開始時間
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.HolidayEndTime)
+                        結束時間
                     </th>
                     <th></th>
                 </tr>
 
-                @foreach (var item in Model.Holidays)
+                @foreach (var item in holiday)
                 {
                     <tr>
                         <td>
@@ -107,11 +110,11 @@
                             @Html.DisplayFor(modelItem => item.EndTime)
                         </td>
                         <td>
-                            <input type="submit" value="刪除" class="submit" onclick="javascript:if(!window.confirm('你確定要刪除嗎?')) window.event.returnValue = false;">
-                            @*<form action="/Admin/Vouchers/Delete" method="post">
-                                    <a>刪除</a>
+                            
+                            <form action="/Admin/BKCompany/Delete" method="post">
+                                <input type="submit" value="刪除" class="submit" onclick="javascript:if(!window.confirm('你確定要刪除嗎?')) window.event.returnValue = false;">
                                     <input type="hidden" name="id" value=@item.Id>
-                                </form>*@
+                                </form>
                             @*<script>
                                 var form = document.querySelectorAll(".submit");
                                 form.forEach(item => {

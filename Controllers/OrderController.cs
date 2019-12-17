@@ -60,15 +60,22 @@ namespace sys.Controllers
                 //{
                 //    return Content("機器人來襲");
                 //}
+                if (orderDetail == null)
+                {
+                    return Content("請選擇訂購商品");
+                }
+
                 //建立總表
                 Order order = new Order();
                 order.Cid = Convert.ToInt32(Session["Id"]);
-                DateTime orderTime = orderDetail[0].time != null
-                    ? Convert.ToDateTime(orderDetail[0].time).AddHours(23)
-                    : DateTime.UtcNow.AddHours(23);
-                order.OrderTime = orderTime;
+                //DateTime orderTime = orderDetail[0].time != null
+                //    ? Convert.ToDateTime(orderDetail[0].time).AddHours(23)
+                //    : DateTime.UtcNow.AddHours(23);
+                //order.OrderTime = orderTime;
+                
+                order.OrderTime = Convert.ToDateTime(orderDetail[0].time);
                 int preTime = db.CompanySet.OrderByDescending(x => x.Id).FirstOrDefault().PrepareTime;
-                order.GetTime = orderTime.AddMinutes(preTime);
+                order.GetTime = order.OrderTime.AddMinutes(preTime);
                 order.Status = "prepare";
                 db.Orders.Add(order);
                 db.SaveChanges();
@@ -121,7 +128,7 @@ namespace sys.Controllers
                 status = x.Status,
                 time = x.GetTime,
                 total = x.OrderDetails.Sum(w => w.Price * w.Qty)
-            });
+            }).OrderByDescending(x=>x.status=="finish").ThenByDescending(x=>x.status=="done").ThenByDescending(x=>x.status=="ready").ThenByDescending(x=>x.status=="prepare").ThenByDescending(x=>x.time);
             return Content(JsonConvert.SerializeObject(result));
         }
         #endregion
@@ -131,13 +138,13 @@ namespace sys.Controllers
         {
             var result = db.OrderDetails.Where(x => x.Oid == id).Select(x => new
             {
-                pid = x.Pid,
+                pid = x.Id,
                 name = x.ProductList.Name,
-                img = x.ProductList.Img,
+                img = x.ProductList.ProductImg.Select(w=>w.Pimg).Take(1),
                 options = x.Options,
                 Qty = x.Qty,
                 subtotal = x.Qty * x.Price,
-                status=x.Status
+                status = x.Status
             });
             return Content(JsonConvert.SerializeObject(result));
         }

@@ -22,7 +22,7 @@ namespace sys.Models
         #region 20.註冊API/POST
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Tel,Password,PasswordSalt,Name,Birth,City,Dist,Vertify,Check,IsTable")] Account account)
+        public ActionResult Create([Bind(Include = "Id,Tel,Password,PasswordSalt,Name,Birth,County,Dist,Vertify,Check,IsTable")] Account account)
         {
             try
             {
@@ -134,7 +134,6 @@ namespace sys.Models
         {
             //HttpCookie RegisteredId = Request.Cookies["RegisteredId"];
             //int id = Convert.ToInt32(RegisteredId.Value);
-            
             //Account account = db.Accounts.Find(id);
             Account account = db.Accounts.Where(x => x.Tel == Tel).FirstOrDefault();
             
@@ -145,6 +144,9 @@ namespace sys.Models
                 account.wrong = 0;
                 db.SaveChanges();
                 Session["Id"] = account.Id;
+                Session["IsTable"] = account.IsTable;
+                Session["Tel"] = account.Tel;
+                Session["Name"] = account.Name;
                 return Content(account.Id.ToString());
             }
             else
@@ -437,6 +439,27 @@ namespace sys.Models
             public string action { get; set; }
             public bool success { get; set; }
             public string hostname { get; set; }
+        }
+        #endregion
+
+        #region 42.會員登出GET
+
+        public ActionResult Logout()
+        {
+            Session.Remove("IsTable");
+            Session.Remove("Id");
+            Session.Remove("Tel");
+            Session.Remove("Name");
+            return Content("success");
+        }
+        #endregion
+        #region 43.員工登出GET
+
+        public ActionResult EmployeeLogout()
+        {
+            Session.Remove("EmployeeID");
+            
+            return Content("success");
         }
         #endregion
         protected override void Dispose(bool disposing)

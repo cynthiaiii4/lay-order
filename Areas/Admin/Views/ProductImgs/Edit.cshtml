@@ -1,0 +1,49 @@
+﻿@model IEnumerable<sys.Models.ProductImg>
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit</h2>
+<p>
+<form action="~/Admin/ProductImgs/Edit" method="post" enctype="multipart/form-data">
+    <input type="hidden" value="@ViewBag.id " name="Pid">
+    <input type="file" name="Pimg" accept="image/*" id="Pimg"> <input type="submit" value="新增圖檔">
+</form>
+<p>
+
+    <hr>
+    <span style="color: darksalmon">*商品主圖為第一張圖片</span>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pimg)
+            </th>
+
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    <img src="/Img/product/@item.Pimg " style="width: 200px">
+                </td>
+
+                <td>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+
+    </table>
+
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>

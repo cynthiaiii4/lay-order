@@ -130,4 +130,6 @@ C:\Users\user\Desktop\workspace\Csharp\sys\sys\bin\Microsoft.Owin.Security.xml
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\bin\zh-Hant\Microsoft.AspNet.SignalR.Core.resources.dll
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\bin\zh-Hant\Microsoft.AspNet.SignalR.SystemWeb.resources.dll
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\bin\zh-Hant\Microsoft.Owin.resources.dll
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.addPImg.resources
+C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.Migrations.deleteImg.resources
 C:\Users\user\Desktop\workspace\Csharp\sys\sys\obj\Debug\sys.csprojAssemblyReference.cache

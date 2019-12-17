@@ -41,7 +41,8 @@ namespace sys.Controllers
                     Id = w.Id,
                     ProductName = w.ProductList.Name,
                     option = w.Options,
-                    Qty = w.Qty
+                    Qty = w.Qty,
+                    status = w.Status
                 })
             });
 
@@ -62,15 +63,15 @@ namespace sys.Controllers
             }
             if (!string.IsNullOrEmpty(status))
             {
-                result = result.Where(x => x.status == status);
-                if (status == "ready")
+                if (status == "done")
                 {
-                    result = result.OrderByDescending(x => x.gettime);
+                    result = result.Where(x => x.status == "done" || x.status == "finish").OrderByDescending(x => x.gettime);
                 }
+                result = result.Where(x => x.status == status);
             }
             else
             {
-                result = result.Where(x => x.status == "prepare");
+                result = result.Where(x => x.status == "prepare" || x.status == "ready").OrderByDescending(x => x.gettime);
             }
             var finalResult = result.OrderBy(x => x.gettime).ToPagedList(page, PageSize);
             return Content(JsonConvert.SerializeObject(finalResult));
@@ -86,12 +87,12 @@ namespace sys.Controllers
             {
                 if (Session["EmployeeID"] == null)
                 {
-                    return Content("fail");
+                    return Content("未登入");
                 }
                 Order order = db.Orders.Find(id);
                 if (order.Status != "done")
                 {
-                    order.Status = "ready";
+                    order.Status = "finish";
                 }
                 List<OrderDetail> orderDetail = db.OrderDetails.Where(x => x.Oid == id).ToList();
                 foreach (var item in orderDetail)
@@ -111,19 +112,19 @@ namespace sys.Controllers
         }
         #endregion
 
-        #region 36單品完成GET
+        #region 37單品完成GET
         public ActionResult CompleteOrderItem(int Oid, int id)
         {
             try
             {
                 if (Session["EmployeeID"] == null)
                 {
-                    return Content("fail");
+                    return Content("未登入");
                 }
                 OrderDetail orderDetail = db.OrderDetails.Find(id);
                 orderDetail.Status = "ready";
                 Order order = db.Orders.Find(Oid);
-                if (orderDetail.Status!="done")
+                if (orderDetail.Status != "done")
                 {
                     order.Status = "ready";
                 }
@@ -170,17 +171,21 @@ namespace sys.Controllers
             }
             if (!string.IsNullOrEmpty(status))
             {
-                result = result.Where(x => x.status == status);
-                if (status == "ready")
+                if (status == "done")
                 {
-                    result = result.OrderByDescending(x => x.gettime);
+                    result = result.Where(x => x.status == "done" || x.status == "finish").OrderByDescending(x => x.gettime);
                 }
+                result = result.Where(x => x.status == status);
             }
             else
             {
-                result = result.Where(x => x.status == "prepare");
+                result = result.Where(x => x.status == "prepare" || x.status == "ready").OrderByDescending(x => x.gettime);
             }
             int page = result.Count();
+            if (page % 4 == 0)
+            {
+                page = page / 4;
+            }
             page = (page / 4) + 1;
             return Content(page.ToString());
         }

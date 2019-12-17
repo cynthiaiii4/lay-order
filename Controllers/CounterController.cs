@@ -50,11 +50,15 @@ namespace sys.Controllers
             }
             if (!string.IsNullOrEmpty(status))
             {
+                if (status == "ready")
+                {
+                    result = result.Where(x => x.status == "ready" || x.status == "finish");
+                }
                 result = result.Where(x => x.status == status);
             }
             else
             {
-                result = result.Where(x => x.status == "prepare" || x.status == "done" || x.status == "ready");
+                result = result.Where(x => x.status != "cancel" && x.status != "paid");
             }
 
             var finalResult = result.OrderBy(x => x.gettime).ToPagedList(page, PageSize);
@@ -121,13 +125,25 @@ namespace sys.Controllers
                 OrderDetail orderDetail = db.OrderDetails.Find(id);
                 orderDetail.Status = "done";
                 Order order = db.Orders.Find(Oid);
-                order.Status = "prepare";
+                List<OrderDetail> orderDetailList = db.OrderDetails.Where(x => x.Oid == Oid).ToList();
+                if (!orderDetailList.Exists(x=>x.Status=="ready"))
+                {
+                    if (!orderDetailList.Exists(x => x.Status == "prepare"))
+                    {
+                        order.Status = "done";
+                    }
+                    else
+                    {
+                        order.Status = "prepare";
+                    }
+                }
+                
                 db.SaveChanges();
-                var result = db.OrderDetails.Where(x => x.Oid == id).Select(x => new
+                var result = db.OrderDetails.Where(x => x.Oid == Oid).Select(x => new
                 {
                     pid = x.Pid,
                     name = x.ProductList.Name,
-                    img = x.ProductList.Img,
+                    img = x.ProductList.ProductImg.Select(w=>w.Pimg).Take(1),
                     options = x.Options,
                     Qty = x.Qty,
                     subtotal = x.Qty * x.Price,
@@ -169,20 +185,27 @@ namespace sys.Controllers
             }
             if (!string.IsNullOrEmpty(status))
             {
+                if (status == "ready")
+                {
+                    result = result.Where(x => x.status == "ready" || x.status == "finish");
+                }
                 result = result.Where(x => x.status == status);
             }
             else
             {
-                result = result.Where(x => x.status == "prepare" || x.status == "done" || x.status == "ready");
+                result = result.Where(x => x.status != "cancel" && x.status != "paid");
             }
             int page = result.Count();
+            if (page % 9 == 0)
+            {
+                page = page / 9;
+            }
             page = (page / 9) + 1;
             return Content(page.ToString());
         }
         #endregion
 
         #region 41.整張單送餐完畢GET
-
         public ActionResult OrderDelivered(int id)
         {
             try
@@ -207,6 +230,56 @@ namespace sys.Controllers
             }
         }
         #endregion
+
+        #region 44.復原結帳單GET
+
+        public ActionResult BackToDone(int Oid)
+        {
+            try
+            {
+                if (Session["EmployeeID"] == null)
+                {
+                    return Content("未登入");
+                }
+                var order = db.Orders.Find(Oid);
+                order.Status = "done";
+                db.SaveChanges();
+                return Content("success");
+            }
+            catch 
+            {
+                return Content("fail");
+            }
+        }
+        #endregion
+
+        #region 44.復原取消單GET
+
+        public ActionResult BackToPrepare(int Oid)
+        {
+            try
+            {
+                if (Session["EmployeeID"] == null)
+                {
+                    return Content("未登入");
+                }
+                var order = db.Orders.Find(Oid);
+                order.Status = "prepare";
+                List<OrderDetail> orderDetail = db.OrderDetails.Where(x => x.Oid == Oid).ToList();
+                foreach (var item in orderDetail)
+                {
+                    item.Status = "prepare";
+                }
+                db.SaveChanges();
+                return Content("success");
+            }
+            catch
+            {
+                return Content("fail");
+            }
+        }
+        #endregion
+
 
         protected override void Dispose(bool disposing)
         {

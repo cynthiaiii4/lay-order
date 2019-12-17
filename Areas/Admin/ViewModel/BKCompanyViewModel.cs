@@ -10,6 +10,9 @@ namespace sys.Areas.Admin.ViewModel
 {
     public class BKCompanyViewModel
     {
+        [Display(Name = "id")]
+        public string CompanySetID { get; set; }
+
         [Required(ErrorMessage = "{0}必填")]
         [Display(Name = "電話")]
         public string Tel { get; set; }
@@ -31,16 +34,20 @@ namespace sys.Areas.Admin.ViewModel
         [Required(ErrorMessage = "{0}必填")]
         [Display(Name = "備餐時間")]
         public int PrepareTime { get; set; }
-        [Required(ErrorMessage = "{0}必填")]
-        [Display(Name = "假期開始時間")]
-        [DataType(DataType.DateTime)]
-        public DateTime HolidayStartTime { get; set; }
 
-        [Required(ErrorMessage = "{0}必填")]
-        [Display(Name = "假期結束時間")]
-        [DataType(DataType.DateTime)]
-        public DateTime HolidayEndTime { get; set; }
+        
+        //[Display(Name = "id")]
+        //public int id { get; set; }
+        //[Required(ErrorMessage = "{0}必填")]
+        //[Display(Name = "假期開始時間")]
+        //[DataType(DataType.DateTime)]
+        //public DateTime HolidayStartTime { get; set; }
 
-        public IEnumerable<holiday> Holidays { get; set; }
+        //[Required(ErrorMessage = "{0}必填")]
+        //[Display(Name = "假期結束時間")]
+        //[DataType(DataType.DateTime)]
+        //public DateTime HolidayEndTime { get; set; }
+
+        //public IEnumerable<holiday> Holidays { get; set; }
     }
 }

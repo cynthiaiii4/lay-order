@@ -152,8 +152,11 @@
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\BKBannersController.cs" />
     <Compile Include="Areas\Admin\Controllers\BKCompanyController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BKProductController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\MembersController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProductImgsController.cs" />
     <Compile Include="Areas\Admin\Controllers\VouchersController.cs" />
     <Compile Include="Areas\Admin\ViewModel\BKCompanyViewModel.cs" />
     <Compile Include="ChatHub.cs" />
@@ -274,6 +277,14 @@
     <Compile Include="Migrations\201912110517200_adjcity.Designer.cs">
       <DependentUpon>201912110517200_adjcity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912160347260_addPImg.cs" />
+    <Compile Include="Migrations\201912160347260_addPImg.Designer.cs">
+      <DependentUpon>201912160347260_addPImg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912160353570_deleteImg.cs" />
+    <Compile Include="Migrations\201912160353570_deleteImg.Designer.cs">
+      <DependentUpon>201912160353570_deleteImg.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
@@ -290,6 +301,7 @@
     <Compile Include="Models\OrderDetail.cs" />
     <Compile Include="Models\Permission.cs" />
     <Compile Include="Models\ProductCategory.cs" />
+    <Compile Include="Models\ProductImg.cs" />
     <Compile Include="Models\ProductList.cs" />
     <Compile Include="Models\Area.cs" />
     <Compile Include="Models\Voucher.cs" />
@@ -327,6 +339,19 @@
     <Content Include="Areas\Admin\Views\BKBanners\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\BKCompany\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\BKCompany\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\BKProduct\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\BKProduct\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\BKProduct\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\BKProduct\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Category\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Category\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Category\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\BKProduct\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductImgs\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductImgs\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductImgs\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductImgs\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductImgs\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -492,6 +517,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912110517200_adjcity.resx">
       <DependentUpon>201912110517200_adjcity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912160347260_addPImg.resx">
+      <DependentUpon>201912160347260_addPImg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912160353570_deleteImg.resx">
+      <DependentUpon>201912160353570_deleteImg.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

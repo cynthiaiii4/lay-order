@@ -17,19 +17,18 @@ namespace sys.Controllers
         #region 是否營業GET
         public ActionResult IsOpen()
         {
-
-            DateTime today = DateTime.UtcNow.AddHours(23);
+            
+            DateTime today = DateTime.UtcNow.AddHours(8);
             if (db.holiday.Where(x => x.EndTime > today && x.StartTime < today).Count() > 0)
             {
                 return Content("no");
             }
             int id = db.CompanySet.Count();
             Company company = db.CompanySet.Find(id);
-            DateTime date = DateTime.Today.AddHours(23);
-            string startTime = date.ToString("yyyy-MM-dd") + " " + company.StartTime;
-            string endTime = date.ToString("yyyy-MM-dd") + " " + company.EndTime;
-            DateTime start = Convert.ToDateTime(startTime).AddHours(23);
-            DateTime end = Convert.ToDateTime(endTime).AddHours(23);
+            string startTime = today.ToString("yyyy-MM-dd") + " " + company.StartTime;
+            string endTime = today.ToString("yyyy-MM-dd") + " " + company.EndTime;
+            DateTime start = Convert.ToDateTime(startTime);
+            DateTime end = Convert.ToDateTime(endTime);
 
             if (start < today && end > today)
             {

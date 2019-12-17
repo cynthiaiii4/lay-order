@@ -35,11 +35,6 @@ namespace sys.Models
         [Display(Name = "產品價格")]
         public int Price { get; set; }
 
-        [Required(ErrorMessage = "{0}必填")]
-        [Display(Name = "產品圖片")]
-        public string Img { get; set; }
-
-        
         [Display(Name = "附餐選項一")]
         public string Sides1 { get; set; }
         [Display(Name = "附餐選項二")]
@@ -52,5 +47,7 @@ namespace sys.Models
         public string Sides4 { get; set; }
         [JsonIgnore]
         public  ICollection<OrderDetail> OrderDetails { get; set; }
+       
+        public ICollection<ProductImg> ProductImg { get; set; }
     }
 }

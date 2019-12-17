@@ -87,6 +87,9 @@ namespace sys.Areas.Admin.Controllers
                 if (banner.StartTime>banner.EndTime)
                 {
                     ViewBag.Message = "開始日期不得大於結束日期!";
+                    ViewBag.Img = banner.Img;
+                    ViewBag.StartTime = banner.StartTime.ToString("yyyy-MM-dd");
+                    ViewBag.EndTime = banner.EndTime.ToString("yyyy-MM-dd");
                     return View(banner);
                 }
                 if (NewImg != null)
@@ -94,6 +97,9 @@ namespace sys.Areas.Admin.Controllers
                     if (NewImg.ContentType.IndexOf("image", System.StringComparison.Ordinal) == -1)
                     {
                         ViewBag.Message = "檔案型態錯誤!";
+                        ViewBag.Img = banner.Img;
+                        ViewBag.StartTime = banner.StartTime.ToString("yyyy-MM-dd");
+                        ViewBag.EndTime = banner.EndTime.ToString("yyyy-MM-dd");
                         return View(banner);
                     }
                     //取得副檔名
