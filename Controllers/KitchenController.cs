@@ -191,6 +191,29 @@ namespace sys.Controllers
         }
         #endregion
 
+        #region 46.取消待出餐
+        public ActionResult BackToPrepare(int Pid)
+        {
+            try
+            {
+                if (Session["EmployeeID"] == null)
+                {
+                    return Content("未登入");
+                }
+                var orderDetail = db.OrderDetails.Find(Pid);
+                orderDetail.Status = "prepare";
+                db.SaveChanges();
+                return Content("success");
+            }
+            catch
+            {
+                return Content("fail");
+            }
+        }
+
+
+        #endregion
+
         // GET: Kitchen
         public ActionResult Index()
         {

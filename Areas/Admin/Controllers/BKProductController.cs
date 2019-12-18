@@ -17,11 +17,9 @@ namespace sys.Areas.Admin.Controllers
         // GET: Admin/BKProduct
         public ActionResult Index()
         {
-            var productLists = db.ProductLists.Include(p => p.ProductCategory);
+            var productLists = db.ProductLists.Include(p => p.ProductCategory).Include(w=>w.ProductImg);
             return View(productLists.ToList());
         }
-
-        
 
         // GET: Admin/BKProduct/Create
         public ActionResult Create()
@@ -34,14 +32,14 @@ namespace sys.Areas.Admin.Controllers
         // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
         // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,PCid,Name,Description,Price,Sides1,Sides2,Sides3,Sides4")] ProductList productList)
         {
             if (ModelState.IsValid)
             {
                 db.ProductLists.Add(productList);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Edit","ProductImgs",new { id=productList.Id });
             }
 
             ViewBag.PCid = new SelectList(db.ProductCategoryList, "Id", "PCName", productList.PCid);

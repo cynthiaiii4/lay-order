@@ -62,7 +62,6 @@ namespace sys.Models
             {
                 return Content("fail");
             }
-
         }
 
         #region 密碼加密
@@ -151,7 +150,6 @@ namespace sys.Models
             }
             else
             {
-                
                 int fail = account.wrong;
                 fail = fail + 1;
                 account.wrong = fail;

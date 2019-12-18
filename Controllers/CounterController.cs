@@ -20,49 +20,56 @@ namespace sys.Controllers
         #region 30.顯示訂單總表GET
         public ActionResult ShowOrderList(string type, string status, int page)
         {
-            if (Session["EmployeeID"] == null)
+            try
             {
-                return Content("未登入");
-            }
-            int PageSize = 9;
-            page = page - 1;
-            var result = db.Orders.Select(x => new
-            {
-                Orderid = x.Id,
-                isTable = x.Account.IsTable,
-                customer = x.Account.Name,
-                tel = x.Account.Tel,
-                ordertime = x.OrderTime,
-                gettime = x.GetTime,
-                total = x.OrderDetails.Sum(w => w.Price * w.Qty),
-                status = x.Status
-            });
-
-            bool isTable = false;
-            if (type == "forhere")
-            {
-                isTable = true;
-            }
-
-            if (!string.IsNullOrEmpty(type))
-            {
-                result = result.Where(x => x.isTable == isTable);
-            }
-            if (!string.IsNullOrEmpty(status))
-            {
-                if (status == "ready")
+                if (Session["EmployeeID"] == null)
                 {
-                    result = result.Where(x => x.status == "ready" || x.status == "finish");
+                    return Content("未登入");
                 }
-                result = result.Where(x => x.status == status);
-            }
-            else
-            {
-                result = result.Where(x => x.status != "cancel" && x.status != "paid");
-            }
+                int PageSize = 9;
+                page = page - 1;
+                var result = db.Orders.Select(x => new
+                {
+                    Orderid = x.Id,
+                    isTable = x.Account.IsTable,
+                    customer = x.Account.Name,
+                    tel = x.Account.Tel,
+                    ordertime = x.OrderTime,
+                    gettime = x.GetTime,
+                    total = x.OrderDetails.Sum(w => w.Price * w.Qty),
+                    status = x.Status
+                });
 
-            var finalResult = result.OrderBy(x => x.gettime).ToPagedList(page, PageSize);
-            return Content(JsonConvert.SerializeObject(finalResult));
+                bool isTable = false;
+                if (type == "forhere")
+                {
+                    isTable = true;
+                }
+
+                if (!string.IsNullOrEmpty(type))
+                {
+                    result = result.Where(x => x.isTable == isTable);
+                }
+                if (!string.IsNullOrEmpty(status))
+                {
+                    if (status == "ready")
+                    {
+                        result = result.Where(x => x.status == "ready" || x.status == "finish");
+                    }
+                    result = result.Where(x => x.status == status);
+                }
+                else
+                {
+                    result = result.Where(x => x.status != "cancel" && x.status != "paid");
+                }
+
+                var finalResult = result.OrderBy(x => x.gettime).ToPagedList(page, PageSize);
+                return Content(JsonConvert.SerializeObject(finalResult));
+            }
+            catch
+            {
+                return Content("fail");
+            }
         }
 
         #endregion

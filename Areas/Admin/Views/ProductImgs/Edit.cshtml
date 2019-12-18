@@ -6,10 +6,10 @@
 
 <h2>Edit</h2>
 <p>
-<form action="~/Admin/ProductImgs/Edit" method="post" enctype="multipart/form-data">
-    <input type="hidden" value="@ViewBag.id " name="Pid">
-    <input type="file" name="Pimg" accept="image/*" id="Pimg"> <input type="submit" value="新增圖檔">
-</form>
+    <form action="~/Admin/ProductImgs/Edit" method="post" enctype="multipart/form-data">
+        <input type="hidden" value="@ViewBag.id " name="Pid">
+        <input type="file" name="Pimg" accept="image/*" id="Pimg"> <input type="submit" value="新增圖檔">
+    </form>
 <p>
 
     <hr>
@@ -37,7 +37,30 @@
                 </td>
 
                 <td>
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    <form action="~/Admin/ProductImgs/Delete" method="post">
+                        <input type="submit" value="刪除" class="submit" onclick="javascript:if(!window.confirm('你確定要刪除嗎?')) window.event.returnValue = false;">
+                        <input type="hidden" name="Id" value=@item.Id>
+                    </form>
+                    
+
+                    @*<form action="/Admin/ProductImgs/Delete" method="post">
+                        @Html.ActionLink("Edit", "Edit", new {id = item.Id})
+                        <a>刪除</a>
+                        <input type="hidden" name="id" value=@item.Id>
+                    </form>
+                    <script>
+                        var form = document.querySelectorAll('td');
+                        form.forEach(item => {
+                            item.addEventListener("click",
+                                function() {
+                                    if (!window.confirm('你確定要刪除嗎?'))
+                                        return;
+                                    else {
+                                        this.children().submit();
+                                    }
+                                });
+                        });
+                    </script>*@
                 </td>
             </tr>
         }
@@ -45,5 +68,5 @@
     </table>
 
     <div>
-        @Html.ActionLink("Back to List", "Index")
+        @Html.ActionLink("回到商品列表", "Index","BKProduct")
     </div>

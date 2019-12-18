@@ -38,7 +38,7 @@ namespace sys.Areas.Admin.Controllers
         }
 
         // GET: Admin/ProductImgs/Create
-        public ActionResult Create()
+        public ActionResult Create(int?id)
         {
             ViewBag.Pid = new SelectList(db.ProductLists, "Id", "Name");
             return View();
@@ -50,7 +50,6 @@ namespace sys.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                
                 db.ProductImg.Add(productImg);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -101,36 +100,22 @@ namespace sys.Areas.Admin.Controllers
                 db.ProductImg.Add(productImg);
                 db.SaveChanges();
                 var newProductImg = db.ProductImg.Where(x => x.Pid == productImg.Pid).ToList();
-                return View(newProductImg);
+                return RedirectToAction("Edit", "ProductImgs", new { id = productImg.Pid });
             }
-            ViewBag.Pid = new SelectList(db.ProductLists, "Id", "Name", productImg.Pid);
-            return View(productImg);
-        }
-
-        // GET: Admin/ProductImgs/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ProductImg productImg = db.ProductImg.Find(id);
-            if (productImg == null)
-            {
-                return HttpNotFound();
-            }
-            return View(productImg);
+            //ViewBag.Pid = new SelectList(db.ProductLists, "Id", "Name", productImg.Pid);
+            return RedirectToAction("Edit", "ProductImgs", new { id = productImg.Pid });
         }
 
         // POST: Admin/ProductImgs/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        [HttpPost]
+        public ActionResult Delete(int id)
         {
             ProductImg productImg = db.ProductImg.Find(id);
             db.ProductImg.Remove(productImg);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Edit","ProductImgs",new { id=productImg.Pid});
         }
 
         protected override void Dispose(bool disposing)
