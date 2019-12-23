@@ -344,8 +344,14 @@ namespace sys.Models
         [HttpPost]
         public ActionResult EmployeeLogin(string id, string Password)
         {
-            Member member = db.Members.FirstOrDefault(x => x.Account == id && x.Password == Password);
-            if (member != null)
+            Member member = db.Members.FirstOrDefault(x => x.Account == id);
+            string salt = member.PasswordSalt;
+            string typePassword = GenerateHashWithSalt(Password, salt);
+            if (typePassword != member.Password)
+            {
+                return Content("fail");
+            }
+            else
             {
                 Session["EmployeeID"] = id;
                 return Content("success");
@@ -391,7 +397,6 @@ namespace sys.Models
             {
                 return Content("機器人來襲");
             }
-
             return Content("success");
         }
         private static string PostJsonContent(string token)

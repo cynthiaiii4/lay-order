@@ -8,18 +8,30 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Razor.Generator;
+using MvcPaging;
+using sys.Filters;
 using sys.Models;
 
 namespace sys.Areas.Admin.Controllers
 {
+    [PermissionFilter]
+    [Authorize]
     public class BKBannersController : Controller
     {
         private Membersql db = new Membersql();
-
+        private const int PageSize = 10;
         // GET: Admin/BKBanners
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
-            return View(db.Banners.ToList());
+            if (!page.HasValue)
+            {
+                page = 0;
+            }
+            else
+            {
+                page--;//ToPagedList的pageIndex預設第一頁是0,第二頁是1，所以要-1才是真的頁面
+            }
+            return View(db.Banners.ToList().ToPagedList((int)page, PageSize));
         }
 
         // GET: Admin/BKBanners/Create

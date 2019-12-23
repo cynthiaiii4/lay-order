@@ -51,6 +51,7 @@ namespace sys.Models
         public int Pid { get; set; }
         public string Options { get; set; }
         public int Qty { get; set; }
-        public string time { get; set; }
+        public string orderTime { get; set; }   
+        public string getTime { get; set; }
     }
 }

@@ -49,7 +49,7 @@ namespace sys.Controllers
         }
 
         //訂單頁面
-        #region 確認點餐POST
+        #region 9.確認點餐POST
         [HttpPost]
         //[ValidateAntiForgeryToken]
         public ActionResult Create(OrderContent[] orderDetail)
@@ -73,9 +73,9 @@ namespace sys.Controllers
                 //    : DateTime.UtcNow.AddHours(23);
                 //order.OrderTime = orderTime;
                 
-                order.OrderTime = Convert.ToDateTime(orderDetail[0].time);
-                int preTime = db.CompanySet.OrderByDescending(x => x.Id).FirstOrDefault().PrepareTime;
-                order.GetTime = order.OrderTime.AddMinutes(preTime);
+                order.OrderTime = Convert.ToDateTime(orderDetail[0].orderTime);
+                //int preTime = db.CompanySet.OrderByDescending(x => x.Id).FirstOrDefault().PrepareTime;
+                order.GetTime = Convert.ToDateTime(orderDetail[0].getTime);
                 order.Status = "prepare";
                 db.Orders.Add(order);
                 db.SaveChanges();

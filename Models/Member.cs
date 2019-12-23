@@ -62,7 +62,7 @@ namespace sys.Models
         
         [Display(Name = "建立時間")]
         [DataType(DataType.Date)]
-        public string initDate { get; set; }
+        public DateTime initDate { get; set; }
     }
 
 }

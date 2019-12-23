@@ -6,21 +6,48 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using MvcPaging;
+using sys.Filters;
 using sys.Models;
 
 namespace sys.Areas.Admin.Controllers
 {
+    [PermissionFilter]
+    [Authorize]
     public class BKProductController : Controller
     {
         private Membersql db = new Membersql();
-
+        private const int PageSize = 10;
         // GET: Admin/BKProduct
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
+            ViewBag.CatagoryId = new SelectList(db.ProductCategoryList, "Id", "PCName");
+            if (!page.HasValue)
+            {
+                page = 0;
+            }
+            else
+            {
+                page--;//ToPagedList的pageIndex預設第一頁是0,第二頁是1，所以要-1才是真的頁面
+            }
             var productLists = db.ProductLists.Include(p => p.ProductCategory).Include(w=>w.ProductImg);
-            return View(productLists.ToList());
+            return View(productLists.ToList().ToPagedList((int)page, PageSize));
         }
-
+        [HttpPost]
+        public ActionResult Index(int CatagoryId, int? page)
+        {
+            if (!page.HasValue)
+            {
+                page = 0;
+            }
+            else
+            {
+                page--;//ToPagedList的pageIndex預設第一頁是0,第二頁是1，所以要-1才是真的頁面
+            }
+            var productLists = db.ProductLists.Include(p => p.ProductCategory).Include(w => w.ProductImg).Where(x=>x.ProductCategory.Id== CatagoryId);
+            ViewBag.CatagoryId = new SelectList(db.ProductCategoryList, "Id", "PCName");
+            return View(productLists.ToList().ToPagedList((int)page, PageSize));
+        }
         // GET: Admin/BKProduct/Create
         public ActionResult Create()
         {
@@ -39,7 +66,7 @@ namespace sys.Areas.Admin.Controllers
             {
                 db.ProductLists.Add(productList);
                 db.SaveChanges();
-                return RedirectToAction("Edit","ProductImgs",new { id=productList.Id });
+                return RedirectToAction("Edit","BKProductImgs",new { id=productList.Id });
             }
 
             ViewBag.PCid = new SelectList(db.ProductCategoryList, "Id", "PCName", productList.PCid);

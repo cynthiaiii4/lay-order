@@ -58,6 +58,12 @@
       <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.4.1\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Data.Edm, Version=5.8.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Edm.5.8.3\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.8.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.OData.5.8.3\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Owin, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.4.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
@@ -76,14 +82,29 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Spatial, Version=5.8.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Spatial.5.8.3\lib\net40\System.Spatial.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.OData, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.OData.5.7.0\lib\net45\System.Web.Http.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.7\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -149,16 +170,19 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\BKAccountsController.cs" />
     <Compile Include="Areas\Admin\Controllers\BKBannersController.cs" />
     <Compile Include="Areas\Admin\Controllers\BKCompanyController.cs" />
     <Compile Include="Areas\Admin\Controllers\BKOrdersController.cs" />
     <Compile Include="Areas\Admin\Controllers\BKProductController.cs" />
-    <Compile Include="Areas\Admin\Controllers\CategoryController.cs" />
-    <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
-    <Compile Include="Areas\Admin\Controllers\MembersController.cs" />
-    <Compile Include="Areas\Admin\Controllers\ProductImgsController.cs" />
-    <Compile Include="Areas\Admin\Controllers\VouchersController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BKCategoryController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BKHomeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BKMembersController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BKProductImgsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BKTableController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BKVouchersController.cs" />
     <Compile Include="Areas\Admin\ViewModel\BKCompanyViewModel.cs" />
     <Compile Include="ChatHub.cs" />
     <Compile Include="Controllers\AreasController.cs" />
@@ -286,6 +310,10 @@
     <Compile Include="Migrations\201912160353570_deleteImg.Designer.cs">
       <DependentUpon>201912160353570_deleteImg.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912230219110_adjMtime.cs" />
+    <Compile Include="Migrations\201912230219110_adjMtime.Designer.cs">
+      <DependentUpon>201912230219110_adjMtime.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
@@ -323,15 +351,13 @@
     <Content Include="Areas\Admin\Views\web.config" />
     <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\Error.cshtml" />
-    <Content Include="Areas\Admin\Views\Home\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\Home\Login.cshtml" />
-    <Content Include="Areas\Admin\Views\Members\Create.cshtml" />
-    <Content Include="Areas\Admin\Views\Members\Delete.cshtml" />
-    <Content Include="Areas\Admin\Views\Members\Details.cshtml" />
-    <Content Include="Areas\Admin\Views\Members\Edit.cshtml" />
-    <Content Include="Areas\Admin\Views\Members\List.cshtml" />
+    <Content Include="Areas\Admin\Views\BKHome\Login.cshtml" />
+    <Content Include="Areas\Admin\Views\BKMembers\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\BKMembers\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\BKMembers\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\BKMembers\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Admin\Views\Members\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\BKMembers\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Vouchers\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Vouchers\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Vouchers\Edit.cshtml" />
@@ -344,20 +370,20 @@
     <Content Include="Areas\Admin\Views\BKProduct\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\BKProduct\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\BKProduct\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\Category\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\Category\Edit.cshtml" />
-    <Content Include="Areas\Admin\Views\Category\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\BKCategory\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\BKCategory\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\BKCategory\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\BKProduct\Details.cshtml" />
-    <Content Include="Areas\Admin\Views\ProductImgs\Create.cshtml" />
-    <Content Include="Areas\Admin\Views\ProductImgs\Delete.cshtml" />
-    <Content Include="Areas\Admin\Views\ProductImgs\Details.cshtml" />
-    <Content Include="Areas\Admin\Views\ProductImgs\Edit.cshtml" />
-    <Content Include="Areas\Admin\Views\ProductImgs\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\BKOrders\Create.cshtml" />
-    <Content Include="Areas\Admin\Views\BKOrders\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\BKProductImgs\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\BKProductImgs\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\BKProductImgs\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\BKOrders\Details.cshtml" />
-    <Content Include="Areas\Admin\Views\BKOrders\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\BKOrders\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\BKAccounts\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\BKTable\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\BKTable\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\BKTable\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\BKHome\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -529,6 +555,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912160353570_deleteImg.resx">
       <DependentUpon>201912160353570_deleteImg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912230219110_adjMtime.resx">
+      <DependentUpon>201912230219110_adjMtime.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

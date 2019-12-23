@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 using sys.Models;
 
 namespace sys.Controllers
@@ -55,6 +56,16 @@ namespace sys.Controllers
             return Content(db.CompanySet.OrderByDescending(x => x.Id).FirstOrDefault().Tel);
         }
 
+        #endregion
+
+        #region 47.營業時間GET
+
+        public ActionResult BusinessHours()
+        {
+            Company company = db.CompanySet.Find(1);
+            string[] businessHours = new string[] {company.StartTime,company.EndTime };
+            return Content(JsonConvert.SerializeObject(businessHours));
+        }
         #endregion
         protected override void Dispose(bool disposing)
         {

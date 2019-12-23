@@ -63,7 +63,7 @@ namespace sys.Controllers
                     result = result.Where(x => x.status != "cancel" && x.status != "paid");
                 }
 
-                var finalResult = result.OrderBy(x => x.gettime).ToPagedList(page, PageSize);
+                var finalResult = result.OrderByDescending(x => x.gettime).ToPagedList(page, PageSize);
                 return Content(JsonConvert.SerializeObject(finalResult));
             }
             catch

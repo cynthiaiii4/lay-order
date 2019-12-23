@@ -65,18 +65,20 @@ namespace sys.Controllers
             {
                 if (status == "done")
                 {
-                    result = result.Where(x => x.status == "done" || x.status == "finish").OrderByDescending(x => x.gettime);
+                    result = result.Where(x => x.status == "done" || x.status == "finish" || x.status == "paid").OrderByDescending(x => x.gettime);
                 }
-                result = result.Where(x => x.status == status);
+                else
+                {
+                    result = result.Where(x => x.status == status);
+                }
             }
             else
             {
                 result = result.Where(x => x.status == "prepare" || x.status == "ready").OrderByDescending(x => x.gettime);
             }
-            var finalResult = result.OrderBy(x => x.gettime).ToPagedList(page, PageSize);
+            var finalResult = result.OrderByDescending(x => x.gettime).ToPagedList(page, PageSize);
             return Content(JsonConvert.SerializeObject(finalResult));
         }
-
 
         #endregion
 

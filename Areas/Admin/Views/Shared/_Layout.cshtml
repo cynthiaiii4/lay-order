@@ -44,16 +44,16 @@
             <!-- Logo -->
             <a href="/Members/Index" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini"><b>C</b>sys</span>
+                <span class="logo-mini"><b>L</b>sys</span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg"><b>Cynthia</b>System</span>
+                <span class="logo-lg"><b>LayOrder</b>System</span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top">
                 <!-- Sidebar toggle button-->
-                <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                @*<a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
                     <span class="sr-only">Toggle navigation</span>
-                </a>
+                </a>*@
 
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
@@ -76,7 +76,7 @@
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-right">
-                                        <a href="/Home/Logout" class="btn btn-default btn-flat">Sign out</a>
+                                        <a href="/Admin/BKHome/Logout" class="btn btn-default btn-flat">Sign out</a>
                                     </div>
                                 </li>
                             </ul>
@@ -92,7 +92,7 @@
                 <!-- Sidebar user panel -->
                 <div class="user-panel">
                     <div class="pull-left image">
-                        <img src="~/Admin/template/dist/img/@(ViewBag.userImg)" class="img-circle" alt="User Image">
+                        <img src="~/Admin/UploadFile/Img/@(ViewBag.userImg)" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
                         <p>@(ViewBag.Name)</p>
@@ -110,10 +110,10 @@
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
             <section class="content-header">
-                <h1>
+                @*<h1>
                     @ViewBag.Title
                     <small>@ViewBag.smallTitle</small>
-                </h1>
+                </h1>*@
                 <ol class="breadcrumb">
                     <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                     <li class="active">@ViewBag.Title</li>
@@ -127,13 +127,13 @@
             <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
-        <footer class="main-footer">
+        @*<footer class="main-footer">
             <div class="pull-right hidden-xs">
                 <b>Version</b> 2.4.18
             </div>
             <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io">AdminLTE</a>.</strong> All rights
             reserved.
-        </footer>
+        </footer>*@
 
         <!-- Control Sidebar -->
         <aside class="control-sidebar control-sidebar-dark" style="display: none;">
@@ -362,31 +362,54 @@
     <!-- FastClick -->
     @*<script src="~/Admin/template/bower_components/fastclick/lib/fastclick.js"></script>*@
     <!-- AdminLTE App 這個會跟tree打架-->
-    <script src="~/Admin/template/dist/js/adminlte.min.js"></script>
+    @*<script src="~/Admin/template/dist/js/adminlte.min.js"></script>*@
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     @*<script src="~/Admin/template/dist/js/pages/dashboard.js"></script>*@
     <!-- AdminLTE for demo purposes -->
 @*<script src="~/Admin/template/dist/js/demo.js"></script>*@
 <link href="/Admin/dist/bootree.min.css" rel="stylesheet" type="text/css" />
-    <style>
-        .user-panel > .info {
-            padding-top: 15px;
-        }
+<style>
+    body {
+        font-size: 16px;
+    }
+    .user-panel > .info {
+        padding-top: 15px;
+    }
 
-        .navbar-static-top {
-            height: 50px;
-        }
+    .navbar-static-top {
+        height: 50px;
+    }
 
-        .main-header .sidebar-toggle {
-            padding: 12px 15px;
-        }
+    .main-header .sidebar-toggle {
+        padding: 12px 15px;
+    }
 
-        .formbyc {
-            margin: 15px 30px 0px 30px;
-            width: 95%;
-            padding-left: 28px;
-        }
-        </style>
+    .formbyc {
+        margin: 15px 30px 0px 30px;
+        width: 95%;
+        padding-left: 28px;
+    }
+    .user-panel>.image>img {
+        max-width: 50px;
+    }
+    .navbar-nav>.user-menu .user-image {
+        width: 35px;
+        height: 35px;
+        margin-top: -6px;
+    }
+    .content-header>.breadcrumb {
+        font-size: 14px;
+    }
+    .formbyc {
+        margin: 40px 30px 0px 30px;
+        padding: 20px;
+    }
+    h3, .h3 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    
+</style>
    
 </body>
 </html>

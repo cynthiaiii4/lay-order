@@ -1,31 +1,38 @@
-﻿@using sys.Models
-@model IQueryable<sys.Models.ProductList>
+﻿@using MvcPaging
+@*@model IEnumerable<sys.Models.ProductList>*@
 
+@model MvcPaging.IPagedList<sys.Models.ProductList>
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "產品列表";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("新增產品", "Create")
-    @Html.ActionLink("新增類別", "Index", "Category")
-</p>
+<h3>@ViewBag.Title</h3>
+<form action="~/Admin/BKProduct/Index" method="post" style="display: flex;">
+    <p style="display: flex">
+        <a href="/Admin/BKProduct/Create" class="btn btn-block btn-success">新增產品</a>
+        <a href="/Admin/BKCategory/Index" class="btn btn-block btn-success" style="margin-left:5px">新增類別</a>
+    </p>
+    <p style="display: flex; margin-left: 50px;">
+        @Html.DropDownList("CatagoryId", "請選擇類別")
+        <input type="submit" value="搜尋" class="btn btn-block btn-info" style="font-weight: bold" >
+    </p>
+    <hr />
+</form>
 <table class="table">
     <tr>
-        @*<th>
-            @Html.DisplayNameFor(model => model.ProductCategory.PCName)
+        <th>
+            @Html.DisplayNameFor(model => model.First().ProductCategory.PCName))
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.First().Name)
         </th>
         <th>
             商品圖片
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Price)
-        </th>*@
+            @Html.DisplayNameFor(model => model.First().Price)
+        </th>
         <th></th>
     </tr>
 
@@ -40,18 +47,35 @@
             </td>
             <td>
                 @*@Html.DisplayFor(modelItem => item.ProductImg.Where(x=>x.Pid==item.Id).FirstOrDefault().Pimg.Count())*@
-                @Html.DisplayFor(modelItem => item.ProductImg.FirstOrDefault().Pimg)
+                @*@Html.DisplayFor(modelItem => item.ProductImg.FirstOrDefault().Pimg)*@
                 @*string img = item.ProductImg.Where(x=>x.Pid==item.Id).FirstOrDefault().Pimg.ToString();*@
-                @*<img src="/Img/product/@img" />*@
+                <img src="/Img/product/@item.ProductImg.FirstOrDefault().Pimg " style="width: 130px" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                @Html.ActionLink("修改", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("刪除", "Delete", new { id = item.Id })
             </td>
         </tr>
     }
 
 </table>
+<div class="pager">
+    @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount)
+</div>
+<style>
+    .btn-block {
+        width: 90px;
+    }
+
+    .btn-block + .btn-block {
+        margin-top: 0px;
+    }
+    input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].btn-block {
+        width: 90px;
+        margin-left: 5px;
+    }
+</style>
+

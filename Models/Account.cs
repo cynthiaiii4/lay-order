@@ -57,7 +57,7 @@ namespace sys.Models
         [Display(Name = "是否驗證")]
         public bool IsCheck { get; set; }
 
-        [Display(Name = "內用外帶")]
+        [Display(Name = "桌子")]
         public bool IsTable { get; set; }
 
         [Display(Name = "寄送簡訊次數")]

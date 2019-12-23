@@ -26,7 +26,7 @@ namespace sys.Controllers
         }
         #endregion
 
-        #region 取得商品列表GET
+        #region 2.取得商品列表GET
         public ActionResult GetProduct(int? PCid)
         {
             var result = db.ProductLists.Select(x => new
@@ -46,7 +46,7 @@ namespace sys.Controllers
         }
         #endregion
 
-        #region 取得單品細節GET
+        #region 3.取得單品細節GET
 
         public ActionResult GetProductDetail(int id)
         {
@@ -57,6 +57,7 @@ namespace sys.Controllers
                 Price = x.Price,
                 PCid = x.PCid,
                 Img = db.ProductImg.Where(w => w.Pid == x.Id).Select(w => w.Pimg),
+                Description= x.Description,
                 Sides1 = x.Sides1,
                 Sides2 = x.Sides2,
                 Sides3 = x.Sides3,

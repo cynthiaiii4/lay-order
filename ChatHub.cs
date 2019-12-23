@@ -12,6 +12,7 @@ namespace sys
         {
             // Call the addNewMessageToPage method to update clients.
             Clients.All.addNewMessageToPage(message);
+
         }
     }
 }

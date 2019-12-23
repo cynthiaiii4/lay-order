@@ -7,10 +7,13 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using sys.Areas.Admin.ViewModel;
+using sys.Filters;
 using sys.Models;
 
 namespace sys.Areas.Admin.ViewModel
 {
+    [PermissionFilter]
+    [Authorize]
     public class BKCompanyController : Controller
     {
         private Membersql db = new Membersql();
