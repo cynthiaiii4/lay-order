@@ -1,13 +1,13 @@
 ﻿@*@model sys.Models.ProductList*@
 @model IEnumerable<sys.Models.ProductList>
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "刪除類別";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/paper/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<h3>@ViewBag.Title</h3>
 
-<h2>Delete</h2>
-
-<h3>你確定要刪除該類別嗎?</h3>
+<h4>你確定要刪除該類別嗎?</h4>
 <div>
     <h4 style="color: red">警告!!!!以下商品也會同步刪除</h4>
     <hr />
@@ -79,8 +79,8 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="確定刪除該類別" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            <input type="submit" value="確定刪除該類別" class="btn btn-default" /> 
+            <a href="~/Admin/BKCategory" class="btn btn-default" style="padding-left: 10px">取消</a>
         </div>
     }
 </div>

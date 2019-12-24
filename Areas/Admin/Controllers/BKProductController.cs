@@ -34,19 +34,31 @@ namespace sys.Areas.Admin.Controllers
             return View(productLists.ToList().ToPagedList((int)page, PageSize));
         }
         [HttpPost]
-        public ActionResult Index(int CatagoryId, int? page)
+        public ActionResult Index(int? CatagoryId, int? page)
         {
-            if (!page.HasValue)
+            try
             {
-                page = 0;
+                if (!page.HasValue)
+                {
+                    page = 0;
+                }
+                else
+                {
+                    page--;//ToPagedList的pageIndex預設第一頁是0,第二頁是1，所以要-1才是真的頁面
+                }
+                var productLists = db.ProductLists.Include(p => p.ProductCategory).Include(w => w.ProductImg);
+                if (CatagoryId != null)
+                {
+                    productLists = productLists.Where(x => x.ProductCategory.Id == CatagoryId);
+                }
+                ViewBag.CatagoryId = new SelectList(db.ProductCategoryList, "Id", "PCName");
+                return View(productLists.ToList().ToPagedList((int)page, PageSize));
             }
-            else
+            catch
             {
-                page--;//ToPagedList的pageIndex預設第一頁是0,第二頁是1，所以要-1才是真的頁面
+                return View();
             }
-            var productLists = db.ProductLists.Include(p => p.ProductCategory).Include(w => w.ProductImg).Where(x=>x.ProductCategory.Id== CatagoryId);
-            ViewBag.CatagoryId = new SelectList(db.ProductCategoryList, "Id", "PCName");
-            return View(productLists.ToList().ToPagedList((int)page, PageSize));
+            
         }
         // GET: Admin/BKProduct/Create
         public ActionResult Create()
@@ -55,11 +67,8 @@ namespace sys.Areas.Admin.Controllers
             return View();
         }
 
-        // POST: Admin/BKProduct/Create
-        // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
-        // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,PCid,Name,Description,Price,Sides1,Sides2,Sides3,Sides4")] ProductList productList)
         {
             if (ModelState.IsValid)
@@ -87,13 +96,15 @@ namespace sys.Areas.Admin.Controllers
             return View(productList);
         }
         // GET: Admin/BKProduct/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int? id,int Page)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             ProductList productList = db.ProductLists.Find(id);
+            ViewBag.id = id;
+            ViewBag.Page = Page;
             if (productList == null)
             {
                 return HttpNotFound();
@@ -107,7 +118,7 @@ namespace sys.Areas.Admin.Controllers
         // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,PCid,Name,Description,Price,Sides1,Sides2,Sides3,Sides4")] ProductList productList)
+        public ActionResult Edit([Bind(Include = "Id,PCid,Name,Description,Price,Sides1,Sides2,Sides3,Sides4")] ProductList productList, int Page)
         {
             if (ModelState.IsValid)
             {
@@ -116,17 +127,20 @@ namespace sys.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.PCid = new SelectList(db.ProductCategoryList, "Id", "PCName", productList.PCid);
+            ViewBag.id = productList.Id;
+            ViewBag.Page = Page;
             return View(productList);
         }
 
         // GET: Admin/BKProduct/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int? id,int Page)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             ProductList productList = db.ProductLists.Find(id);
+            ViewBag.Page = Page;
             if (productList == null)
             {
                 return HttpNotFound();
@@ -137,11 +151,12 @@ namespace sys.Areas.Admin.Controllers
         // POST: Admin/BKProduct/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int id, int Page)
         {
             ProductList productList = db.ProductLists.Find(id);
             db.ProductLists.Remove(productList);
             db.SaveChanges();
+            ViewBag.Page = Page;
             return RedirectToAction("Index");
         }
 

@@ -94,6 +94,8 @@ namespace sys.Areas.Admin.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Account account = db.Accounts.Find(id);
+            ViewBag.PWD = account.Password;
+            ViewBag.salt = account.PasswordSalt;
             if (account == null)
             {
                 return HttpNotFound();
@@ -103,13 +105,17 @@ namespace sys.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Tel,Password,PasswordSalt,Name,Birth,County,Dist,Vertify,IsCheck,IsTable,Sent,wrong")] Account account)
+        public ActionResult Edit([Bind(Include = "Id,Tel,Password,PasswordSalt,Name,Birth,County,Dist,Vertify,IsCheck,IsTable,Sent,wrong")] Account account, string NewPassword)
         {
             if (ModelState.IsValid)
             {
-                string salt = Guid.NewGuid().ToString();
-                account.Password = GenerateHashWithSalt(account.Password, salt);
-                account.PasswordSalt = salt;
+                //密碼加密
+                if (!string.IsNullOrEmpty(NewPassword))
+                {
+                    string salt = Guid.NewGuid().ToString();
+                    account.Password = GenerateHashWithSalt(NewPassword, salt);
+                    account.PasswordSalt = salt;
+                }
                 account.IsTable = true;
                 account.IsCheck = true;
                 db.Entry(account).State = EntityState.Modified;
@@ -130,6 +136,14 @@ namespace sys.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        //public ActionResult QRCode(int id)
+        //{
+        //    Account table = db.Accounts.Find(id);
+        //    string url = "http://www.funcode-tech.com/Encoder_Service/img.aspx?custid=1&username=public&codetype=QR&EClevel=0&data=https://lay-order.rocket-coding.com/index.html#/login?"+ table.Password+"&"+ table.Id + "";
+        //    ViewBag.url
+        //}
         protected override void Dispose(bool disposing)
         {
             if (disposing)

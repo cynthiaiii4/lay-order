@@ -19,6 +19,11 @@ namespace sys.Models
     {
         private Membersql db = new Membersql();
 
+        public ActionResult Index()
+        {
+            return Redirect("https://lay-order.rocket-coding.com/index.html");
+        }
+
         #region 20.註冊API/POST
         [HttpPost]
         //[ValidateAntiForgeryToken]

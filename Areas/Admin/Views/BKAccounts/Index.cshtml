@@ -6,7 +6,7 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     int i = 1;
 }
-
+   
 <h3>@ViewBag.Title</h3>
 
 <form action="~/Admin/BKAccounts/Index" method="post">
@@ -83,6 +83,7 @@
     }
 
 </table>
+
 <div class="pager">
     @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount)
 </div>

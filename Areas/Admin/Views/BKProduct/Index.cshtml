@@ -11,7 +11,7 @@
 <form action="~/Admin/BKProduct/Index" method="post" style="display: flex;">
     <p style="display: flex">
         <a href="/Admin/BKProduct/Create" class="btn btn-block btn-success">新增產品</a>
-        <a href="/Admin/BKCategory/Index" class="btn btn-block btn-success" style="margin-left:5px">新增類別</a>
+        <a href="/Admin/BKCategory/Index" class="btn btn-block btn-primary btnw" style="margin-left:5px">管理商品類別</a>
     </p>
     <p style="display: flex; margin-left: 50px;">
         @Html.DropDownList("CatagoryId", "請選擇類別")
@@ -55,8 +55,8 @@
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
-                @Html.ActionLink("修改", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("刪除", "Delete", new { id = item.Id })
+                @Html.ActionLink("修改", "Edit", new { id = item.Id,Page=Model.PageNumber }) |
+                @Html.ActionLink("刪除", "Delete", new { id = item.Id ,Page=Model.PageNumber})
             </td>
         </tr>
     }
@@ -76,6 +76,9 @@
     input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].btn-block {
         width: 90px;
         margin-left: 5px;
+    }
+    .btnw {
+        width: 120px;
     }
 </style>
 

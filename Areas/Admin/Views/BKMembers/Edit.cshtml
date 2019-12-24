@@ -10,7 +10,7 @@
 <script src="/Admin/dist/bootree.min.js" type="text/javascript"></script>
 
 <h3>@ViewBag.Title</h3>
-@using (Html.BeginForm())
+@using (Html.BeginForm("Create","BKMembers",FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
@@ -22,7 +22,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Account, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Account, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Account, new { htmlAttributes = new { @class = "form-control" ,required=""} })
                 @Html.ValidationMessageFor(model => model.Account, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -40,7 +40,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" ,required=""} })
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -56,7 +56,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" ,required=""} })
                 @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -72,7 +72,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Img, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <img src="/Admin/UploadFile/Img/@ViewBag.Img">
+                <img src="/Admin/UploadFile/Img/@ViewBag.Img" style="width: 100px">
                 <input type="hidden" name="Img" value="@ViewBag.Img ">
                 <input type="file" class="form-control" name="NewImg" id="NewImg" />
                 @Html.ValidationMessageFor(model => model.Img, "", new { @class = "text-danger" })
@@ -93,7 +93,7 @@
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="儲存" class="btn btn-default" />
                 <a href="~/Admin/BKMembers" class="btn btn-default" style="padding-left: 10px">取消</a>
             </div>
         </div>

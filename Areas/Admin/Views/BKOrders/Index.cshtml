@@ -5,30 +5,39 @@
 @model MvcPaging.IPagedList<Order>
 
 @{
-    ViewBag.Title = "訂單狀態";
+    ViewBag.Title = "訂單查詢";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     int i = 1;
 }
 
 <h3>@ViewBag.Title</h3>
-<form action="~/Admin/BKOrder/Search">
-    <label>電話</label>
-    <input type="text" name="Tel" />
-    <label>訂單狀態</label>
-    <select nam="status">
-        <option>請選擇</option>
-        <option value="prepare">準備中</option>
-        <option value="ready">部分品項完成</option>
-        <option value="finish">整張訂單完成</option>
-        <option value="done">送餐完成</option>
-        <option value="paid">付款完成</option>
-        <option value="cancel">取消訂單</option>
-    </select>
+<form action="~/Admin/BKOrders" method="post">
+    <div>
+        <label>電話</label>
+        <input type="text" name="Tel" style="width: 100px"/>
+        <label>內用或外帶</label>
+        <select name="isTable">
+            <option>請選擇</option>
+            <option value="true">內用</option>
+            <option value="false">外帶</option>
+        </select>
+        <label>訂單狀態</label>
+        <select name="status">
+            <option>請選擇</option>
+            <option value="prepare">準備中</option>
+            <option value="ready">部分品項完成</option>
+            <option value="finish">整張訂單完成</option>
+            <option value="done">送餐完成</option>
+            <option value="paid">付款完成</option>
+            <option value="cancel">取消訂單</option>
+        </select>
+    </div>
+    <div>
     <label>查詢取餐時間</label>
-    <input type="datetime-local" name="StartTime" />~<input type="datetime-local" name="EndTime" />
-    <input type="button" value="搜尋">
-    <input type="button" value="清除搜尋條件">
-    <hr />
+    <input type="datetime-local" name="StartTime"/>~<input type="datetime-local" name="EndTime"/>
+    <input type="submit" value="搜尋" class="btn btn-info">
+    </div>
+    <hr/>
 </form>
 
 <table class="table">
@@ -78,7 +87,7 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                @Html.ActionLink("Details", "Details", new { id = item.Id })
+                @Html.ActionLink("訂單詳情", "Details", new { id = item.Id })
             </td>
         </tr>
 

@@ -33,9 +33,9 @@
             <div class="container">
                 <div class="row">
                     <div class="col-sm-8 col-sm-offset-2 text">
-                        <h1><strong>LayOrder</strong> Login Form</h1>
+                        <h1 style="color:grey"><strong>LayOrder</strong> Login Form</h1>
                         <div class="description">
-                            <p>
+                            <p style="color:grey">
                                 歡迎使用lay-order後台管理系統
                             </p>
                         </div>
@@ -46,14 +46,14 @@
                         <div class="form-top">
                             <div class="form-top-left">
                                 <h3>Login to our site</h3>
-                                <p>Enter your username and password to log on:</p>
+                                <p>請輸入您的帳號密碼，忘記密碼請洽管理者</p>
                             </div>
                             <div class="form-top-right">
                                 <i class="fa fa-key"></i>
                             </div>
                         </div>
                         <div class="form-bottom">
-                            @using (Html.BeginForm("Login","BKHome" ))
+                            @using (Html.BeginForm("Login", "BKHome"))
                             {
                                 <div class="login-form">
 
@@ -86,7 +86,15 @@
 
     <style>
         .top-content {
-        background-image: url("/Admin/assets/img/backgrounds/1.jpg");
+            background-image: url("/Admin/assets/img/backgrounds/1.jpg");
+            background-position: center;
+            background-size: cover;
+        }
+        .inner-bg {
+            padding: 50px 0 65px 0;
+        }
+        .form-top {
+            padding: 0 25px;
         }
     </style>
 </body>

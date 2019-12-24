@@ -1,11 +1,11 @@
 ﻿@model sys.Models.Account
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "修改桌次內容";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit</h2>
+<h3>@ViewBag.Title</h3>
 
 
 @using (Html.BeginForm())
@@ -13,13 +13,12 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Account</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            <label for="Name">桌子帳號(須符合電話號碼格式09XXXXXXXX)</label>
+            <label for="Name" class="control-label col-md-2">桌子帳號</label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Tel, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Tel, new { htmlAttributes = new { @class = "form-control" ,required=""} })
                 @Html.ValidationMessageFor(model => model.Tel, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -27,28 +26,28 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                <input type="password" name="NewPassword" class="form-control" />
                 @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                <input type="hidden" name="Password" value=@ViewBag.PWD />
+                <input type="hidden" name="PasswordSalt" value=@ViewBag.salt />
             </div>
         </div>
 
         <div class="form-group">
-            <label for="Name">桌子顯示名稱(例如:A桌)</label>
+            <label for="Name" class="control-label col-md-2">桌子顯示名稱(例如:A桌)</label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" ,required=""} })
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="修改" class="btn btn-default" />
+                <a href="/Admin/BKTable/Index" class="btn btn-default">取消</a>
             </div>
         </div>
     </div>
 }
 
-<div>
-    @Html.ActionLink("回到桌次管理列表", "Index")
-</div>
 
 

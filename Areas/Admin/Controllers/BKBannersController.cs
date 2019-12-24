@@ -19,7 +19,7 @@ namespace sys.Areas.Admin.Controllers
     public class BKBannersController : Controller
     {
         private Membersql db = new Membersql();
-        private const int PageSize = 10;
+        private const int PageSize = 5;
         // GET: Admin/BKBanners
         public ActionResult Index(int? page)
         {
@@ -31,7 +31,7 @@ namespace sys.Areas.Admin.Controllers
             {
                 page--;//ToPagedList的pageIndex預設第一頁是0,第二頁是1，所以要-1才是真的頁面
             }
-            return View(db.Banners.ToList().ToPagedList((int)page, PageSize));
+            return View(db.Banners.OrderByDescending(x=>x.EndTime>DateTime.Now).ThenBy(x=>x.EndTime).ToList().ToPagedList((int)page, PageSize));
         }
 
         // GET: Admin/BKBanners/Create
@@ -49,6 +49,14 @@ namespace sys.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (banner.StartTime>banner.EndTime)
+                {
+                    ViewBag.Message = "起始日期不能大於結束日期";
+                    ViewBag.StartTime = banner.StartTime.ToString("yyyy-MM-dd");
+                    ViewBag.EndTime = banner.EndTime.ToString("yyyy-MM-dd");
+                    return View(banner);
+                }
+
                 if (Img != null)
                 {
                     if (Img.ContentType.IndexOf("image", System.StringComparison.Ordinal) == -1)
@@ -108,7 +116,7 @@ namespace sys.Areas.Admin.Controllers
                 {
                     if (NewImg.ContentType.IndexOf("image", System.StringComparison.Ordinal) == -1)
                     {
-                        ViewBag.Message = "檔案型態錯誤!";
+                        ViewBag.ImgMessage = "檔案型態錯誤!";
                         ViewBag.Img = banner.Img;
                         ViewBag.StartTime = banner.StartTime.ToString("yyyy-MM-dd");
                         ViewBag.EndTime = banner.EndTime.ToString("yyyy-MM-dd");
@@ -133,8 +141,8 @@ namespace sys.Areas.Admin.Controllers
 
         // POST: Admin/BKBanners/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        //[ValidateAntiForgeryToken]
+        public ActionResult Delete(int id)
         {
             Banner banner = db.Banners.Find(id);
             db.Banners.Remove(banner);

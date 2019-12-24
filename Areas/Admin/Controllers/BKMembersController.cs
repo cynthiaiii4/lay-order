@@ -69,7 +69,7 @@ namespace sys.Areas.Admin.Controllers
             {
                 if (stringBuilder.ToString().IndexOf("{id:" + item.id) == -1)
                 {
-                    stringBuilder.Append("{id:" + item.id + ",text:'" +item.id+"."+ item.PermissionName + "'");
+                    stringBuilder.Append("{id:" + item.id + ",text:'" + item.id + "." + item.PermissionName + "'");
                     if (permission.Where(x => x.Pid == item.id).Count() > 0)
                     {
                         stringBuilder.Append(",children:[");
@@ -81,18 +81,25 @@ namespace sys.Areas.Admin.Controllers
                 }
             }
         }
-        public void getList(List<Permission> permission, StringBuilder stringBuilder,string ownPermission)
+        public void getList(List<Permission> permission, StringBuilder stringBuilder, string ownPermission)
         {
             foreach (var item in permission)
             {
                 string check = "false";
                 if (stringBuilder.ToString().IndexOf("{id:" + item.id) == -1)
                 {
-                    if (ownPermission.IndexOf("," + item.id + ",") != -1)
+                    if (!string.IsNullOrEmpty(ownPermission))
                     {
-                        check = "true";
+                        if (ownPermission.IndexOf("," + item.id + ",") != -1)
+                        {
+                            check = "true";
+                        }
                     }
-                    stringBuilder.Append("{id:" + item.id + ",text:'" + item.PermissionName + "'" + ",checked:" + check);
+                    else
+                    {
+                        check = "false";
+                    }
+                    stringBuilder.Append("{id:" + item.id + ",text:'" +item.id+"." +item.PermissionName + "'" + ",checked:" + check);
                     if (permission.Where(x => x.Pid == item.id).Count() > 0)
                     {
                         stringBuilder.Append(",children:[");
@@ -110,35 +117,43 @@ namespace sys.Areas.Admin.Controllers
         // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Account,Password,PasswordSalt,Name,Gender,Email,Permission,Tel,initDate")] Member member, HttpPostedFileBase Img)
+        public ActionResult Create([Bind(Include = "Id,Account,Password,PasswordSalt,Name,Gender,Email,Permission,Tel,initDate")] Member member, HttpPostedFileBase NewImg)
         {
             if (ModelState.IsValid)
             {
-                if (Img != null)
+                if (NewImg != null)
                 {
-                    if (Img.ContentType.IndexOf("image", System.StringComparison.Ordinal) == -1)
+                    if (NewImg.ContentType.IndexOf("image", System.StringComparison.Ordinal) == -1)
                     {
                         ViewBag.Message = "照片型態錯誤!";
                         return View(member);
                     }
+
                     //取得副檔名
-                    string extension = Path.GetExtension(Img.FileName);
+                    string extension = Path.GetExtension(NewImg.FileName);
                     //新檔案名稱
                     string fileName = String.Format("{0:yyyyMMddhhmmsss}.{1}", DateTime.Now, extension);
                     string savedName = Path.Combine(Server.MapPath("/Admin/UploadFile/Img"), fileName);
-                    Img.SaveAs(savedName);
+                    NewImg.SaveAs(savedName);
                     member.Img = fileName;
-
-                    //密碼加密
-                    string salt = Guid.NewGuid().ToString();
-                    member.Password = GenerateHashWithSalt(member.Password, salt);
-                    member.PasswordSalt = salt;
-                    member.initDate = DateTime.Now;
                 }
-                db.Members.Add(member);
+                else
+                {
+                    member.Img = "0.png";
+                }
+                //密碼加密
+                string salt = Guid.NewGuid().ToString();
+                member.Password = GenerateHashWithSalt(member.Password, salt);
+                member.PasswordSalt = salt;
+                member.initDate = DateTime.Now;
+                db.Entry(member).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            List<Permission> permission = db.Permissions.ToList();
+            StringBuilder stringBuilder = new StringBuilder();
+            getList(permission, stringBuilder);
+            ViewBag.data = stringBuilder.ToString();
 
             return View(member);
         }
@@ -181,6 +196,16 @@ namespace sys.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Account,Password,PasswordSalt,Name,Gender,Email,Permission,Tel,Img,initDate")] Member member, HttpPostedFileBase NewImg, string NewPassword)
         {
+            ViewBag.PWD = member.Password;
+            ViewBag.salt = member.PasswordSalt;
+            ViewBag.Img = member.Img;
+            List<Permission> permission = db.Permissions.ToList();
+            StringBuilder stringBuilder = new StringBuilder();
+            string ownPermission = member.Permission;
+            getList(permission, stringBuilder, ownPermission);
+            ViewBag.data = stringBuilder.ToString();
+            ViewBag.Permission = member.Permission;
+            ViewBag.initDate = member.initDate;
             if (ModelState.IsValid)
             {
                 if (NewImg != null)
@@ -197,6 +222,7 @@ namespace sys.Areas.Admin.Controllers
                     string savedName = Path.Combine(Server.MapPath("/Admin/UploadFile/Img"), fileName);
                     NewImg.SaveAs(savedName);
                     member.Img = fileName;
+                    ViewBag.Img = member.Img;
                 }
                 //密碼加密
                 if (!string.IsNullOrEmpty(NewPassword))
@@ -204,21 +230,24 @@ namespace sys.Areas.Admin.Controllers
                     string salt = Guid.NewGuid().ToString();
                     member.Password = GenerateHashWithSalt(NewPassword, salt);
                     member.PasswordSalt = salt;
+                    ViewBag.PWD = member.Password;
+                    ViewBag.salt = member.PasswordSalt;
                 }
                 db.Entry(member).State = EntityState.Modified;
                 db.SaveChanges();
-                ViewBag.PWD = member.Password;
-                ViewBag.salt = member.PasswordSalt;
-                ViewBag.Img = member.Img;
-                List<Permission> permission = db.Permissions.ToList();
-                StringBuilder stringBuilder = new StringBuilder();
-                string ownPermission = member.Permission;
-                getList(permission, stringBuilder, ownPermission);
-                ViewBag.data = stringBuilder.ToString();
-                ViewBag.Permission = member.Permission;
-                ViewBag.initDate = member.initDate;
+                //ViewBag.PWD = member.Password;
+                //ViewBag.salt = member.PasswordSalt;
+                //ViewBag.Img = member.Img;
+                //List<Permission> permission = db.Permissions.ToList();
+                //StringBuilder stringBuilder = new StringBuilder();
+                //string ownPermission = member.Permission;
+                //getList(permission, stringBuilder, ownPermission);
+                //ViewBag.data = stringBuilder.ToString();
+                //ViewBag.Permission = member.Permission;
+                //ViewBag.initDate = member.initDate;
                 return View(member);
             }
+
             return View(member);
         }
 
@@ -280,12 +309,12 @@ namespace sys.Areas.Admin.Controllers
         //        //存到資料庫
         //        member.Account = vertify;
         //            db.Members.Add(member);
-               
+
         //        db.SaveChanges();
         //        //todo:回到驗證頁??
         //        return RedirectToAction("Index");
         //    }
-            
+
         //}
         //private static string GetVertifyNumber(string Url)
         //{

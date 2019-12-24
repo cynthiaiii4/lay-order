@@ -79,17 +79,30 @@ namespace sys.Areas.Admin.Controllers
        [HttpPost]
         public ActionResult Login(string Account, string Password)
         {
-            Models.Member member = _db.Members.FirstOrDefault(x=>x.Account==Account);
-            string salt = member.PasswordSalt;
-            string typePassword = GenerateHashWithSalt(Password, salt);
-            if (typePassword != member.Password)
+            try
             {
-                ViewBag.Message = "登入失敗";
-                return View();
+                Models.Member member = _db.Members.FirstOrDefault(x => x.Account == Account);
+                if (member == null)
+                {
+                    ViewBag.Message = "登入失敗";
+                    return View();
+                }
+                string salt = member.PasswordSalt;
+                string typePassword = GenerateHashWithSalt(Password, salt);
+                if (typePassword != member.Password)
+                {
+                    ViewBag.Message = "登入失敗";
+                    return View();
+                }
+                string userData = JsonConvert.SerializeObject(member);
+                SetAuthenTicket(userData, member.Account);
+                return RedirectToAction("Index", "BKHome");
             }
-            string userData = JsonConvert.SerializeObject(member);
-            SetAuthenTicket(userData, member.Account);
-            return RedirectToAction("Index", "BKHome");
+            catch
+            {
+                return RedirectToAction("Login", "BKHome");
+            }
+            
         }
         //驗證函數
         void SetAuthenTicket(string userData, string userId)

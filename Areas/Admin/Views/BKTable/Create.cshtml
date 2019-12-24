@@ -18,7 +18,7 @@
     <div class="form-group">
         <label for="Name" class="control-label col-md-2">桌子帳號</label>
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Tel, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.Tel, new { htmlAttributes = new { @class = "form-control" ,required=""} })
             @Html.ValidationMessageFor(model => model.Tel, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -26,7 +26,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" ,required=""} })
             @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -34,13 +34,13 @@
     <div class="form-group">
         <label for="Name" class="control-label col-md-2">桌子顯示名稱(例如:A桌)</label>
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" ,required=""} })
             @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Create" class="btn btn-default" />
+            <input type="submit" value="新增" class="btn btn-default" />
             <a href="/Admin/BKTable/Index" class="btn btn-default">取消</a>
         </div>
     </div>

@@ -62,6 +62,13 @@ namespace sys.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (voucher.StartTime > voucher.EndTime)
+                {
+                    ViewBag.Message = "起始日期不能大於結束日期";
+                    ViewBag.CTitle = voucher.Title;
+                    ViewBag.Content = voucher.Content;
+                    return View(voucher);
+                }
                 db.Vouchers.Add(voucher);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -98,6 +105,15 @@ namespace sys.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (voucher.StartTime > voucher.EndTime)
+                {
+                    ViewBag.Message = "起始日期不能大於結束日期";
+                    ViewBag.VTitle = voucher.Title;
+                    ViewBag.Content = voucher.Content;
+                    ViewBag.StartTime = voucher.StartTime.ToString("yyyy-MM-dd");
+                    ViewBag.EndTime = voucher.EndTime.ToString("yyyy-MM-dd");
+                    return View(voucher);
+                }
                 db.Entry(voucher).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");

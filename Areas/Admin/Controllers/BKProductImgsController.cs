@@ -24,21 +24,23 @@ namespace sys.Areas.Admin.Controllers
             ViewBag.Pid = new SelectList(db.ProductLists, "Id", "Name");
             return View();
         }
-
-        //[HttpPost]
-        ////[ValidateAntiForgeryToken]
-        //public ActionResult Create([Bind(Include = "Id,Pid,Pimg")] ProductImg productImg, HttpPostedFileBase Pimg)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.ProductImg.Add(productImg);
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
-
-        //    ViewBag.Pid = new SelectList(db.ProductLists, "Id", "Name", productImg.Pid);
-        //    return View(productImg);
-        //}
+        public ActionResult Check(int id)
+        {
+            int count = db.ProductImg.Where(x => x.Pid == id).Count();
+            if (count > 0)
+            {
+                return RedirectToAction("Index","BKProduct");
+            }
+            else
+            {
+                ProductImg productImg =new ProductImg();
+                productImg.Pid = id;
+                productImg.Pimg = "0.jpg";
+                db.ProductImg.Add(productImg);
+                db.SaveChanges();
+                return RedirectToAction("Index", "BKProduct");
+            }
+        }
 
         // GET: Admin/ProductImgs/Edit/5
         public ActionResult Edit(int? id)

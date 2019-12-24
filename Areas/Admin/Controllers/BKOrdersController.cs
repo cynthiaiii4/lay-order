@@ -34,7 +34,42 @@ namespace sys.Areas.Admin.Controllers
                 .OrderByDescending(x => x.GetTime);
             return View(orders.ToList().ToPagedList((int)page, PageSize));
         }
-
+        [HttpPost]
+        public ActionResult Index(int? page,string Tel,string status, DateTime? StartTime,DateTime? EndTime,string isTable)
+        {
+            if (!page.HasValue)
+            {
+                page = 0;
+            }
+            else
+            {
+                page--;//ToPagedList的pageIndex預設第一頁是0,第二頁是1，所以要-1才是真的頁面
+            }
+            var orders = db.Orders.Include(o => o.Account).Include(x => x.OrderDetails)
+                .OrderByDescending(x => x.GetTime).AsQueryable();
+            if (!string.IsNullOrEmpty(Tel))
+            {
+                orders = orders.Where(x => x.Account.Tel.Contains(Tel));
+            }
+            if (status!= "請選擇")
+            {
+                orders = orders.Where(x => x.Status.Contains(status));
+            }
+            if (StartTime!=null)
+            {
+                orders = orders.Where(x => x.GetTime> StartTime);
+            }
+            if (EndTime != null)
+            {
+                orders = orders.Where(x => x.GetTime < EndTime);
+            }
+            if(isTable != "請選擇")
+            {
+                bool table = Convert.ToBoolean(isTable);
+                orders = orders.Where(x => x.Account.IsTable== table);
+            }
+            return View(orders.ToList().ToPagedList((int)page, PageSize));
+        }
         // GET: Admin/BKOrders/Details/5
         public ActionResult Details(int? id)
         {
