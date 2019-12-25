@@ -98,7 +98,7 @@ namespace sys.Models
             //組成簡訊內容並寄發
             string msg = "你好，您在lay-order的帳號驗證碼為" + vertify + "。請於驗證頁面輸入";
             msg = HttpUtility.UrlEncode(msg);
-            string url = "http://api.every8d.com/API21/HTTP/sendSMS.ashx?UID=0932961027&PWD=layorder&SB=vertify&MSG=" + msg + "&DEST=" + Tel + "&ST=";
+            string url = "http://api.every8d.com/API21/HTTP/sendSMS.ashx?UID=0980197363&PWD=uv3g&SB=vertify&MSG=" + msg + "&DEST=" + Tel + "&ST=";
             string text = GetAPIResponse(url);
             //判斷回傳值
             if (text.StartsWith("-"))
@@ -195,7 +195,7 @@ namespace sys.Models
                 string msg = "你好，您在lay-order的帳號驗證碼為" + vertify + "。請於驗證頁面輸入";
                 msg = HttpUtility.UrlEncode(msg);
                 string url =
-                    "http://api.every8d.com/API21/HTTP/sendSMS.ashx?UID=0932961027&PWD=layorder&SB=vertify&MSG=" + msg +
+                    "http://api.every8d.com/API21/HTTP/sendSMS.ashx?UID=0980197363&PWD=uv3g&SB=vertify&MSG=" + msg +
                     "&DEST=" + account.Tel + "&ST=";
                 string text = GetAPIResponse(url);
                 //判斷回傳值
@@ -349,19 +349,31 @@ namespace sys.Models
         [HttpPost]
         public ActionResult EmployeeLogin(string id, string Password)
         {
-            Member member = db.Members.FirstOrDefault(x => x.Account == id);
-            string salt = member.PasswordSalt;
-            string typePassword = GenerateHashWithSalt(Password, salt);
-            if (typePassword != member.Password)
+            try
+            {
+                Member member = db.Members.FirstOrDefault(x => x.Account == id);
+                if (member == null)
+                {
+                    return Content("fail");
+                }
+                string salt = member.PasswordSalt;
+                string typePassword = GenerateHashWithSalt(Password, salt);
+                if (typePassword != member.Password)
+                {
+                    return Content("fail");
+                }
+                else
+                {
+                    Session["EmployeeID"] = id;
+                    return Content("success");
+                }
+                return Content("fail");
+            }
+            catch
             {
                 return Content("fail");
             }
-            else
-            {
-                Session["EmployeeID"] = id;
-                return Content("success");
-            }
-            return Content("fail");
+            
         }
 
         #endregion

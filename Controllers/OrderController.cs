@@ -17,7 +17,7 @@ namespace sys.Controllers
     {
         private Membersql db = new Membersql();
 
-        
+
         // GET: Order
         public ActionResult Index()
         {
@@ -72,25 +72,33 @@ namespace sys.Controllers
                 //    ? Convert.ToDateTime(orderDetail[0].time).AddHours(23)
                 //    : DateTime.UtcNow.AddHours(23);
                 //order.OrderTime = orderTime;
-                
+
                 order.OrderTime = Convert.ToDateTime(orderDetail[0].orderTime);
                 //int preTime = db.CompanySet.OrderByDescending(x => x.Id).FirstOrDefault().PrepareTime;
                 order.GetTime = Convert.ToDateTime(orderDetail[0].getTime);
                 order.Status = "prepare";
                 db.Orders.Add(order);
                 db.SaveChanges();
-
-                //建立細項
-                foreach (var item in orderDetail)
+                try
                 {
-                    OrderDetail orderItem = new OrderDetail();
-                    orderItem.Oid = order.Id;
-                    orderItem.Pid = item.Pid;
-                    orderItem.Options = item.Options;
-                    orderItem.Qty = item.Qty;
-                    orderItem.Price = db.ProductLists.Where(x => x.Id == item.Pid).FirstOrDefault().Price;
-                    orderItem.Status = "prepare";
-                    db.OrderDetails.Add(orderItem);
+                    //建立細項
+                    foreach (var item in orderDetail)
+                    {
+                        OrderDetail orderItem = new OrderDetail();
+                        orderItem.Oid = order.Id;
+                        orderItem.Pid = item.Pid;
+                        orderItem.Options = item.Options;
+                        orderItem.Qty = item.Qty;
+                        orderItem.Price = db.ProductLists.Where(x => x.Id == item.Pid).FirstOrDefault().Price;
+                        orderItem.Status = "prepare";
+                        db.OrderDetails.Add(orderItem);
+                    }
+                }
+                catch
+                {
+                    db.Orders.Remove(order);
+                    db.SaveChanges();
+                    return Content("fail");
                 }
                 db.SaveChanges();
                 return Content(order.Id.ToString());
@@ -106,12 +114,12 @@ namespace sys.Controllers
 
         public ActionResult OrderSuccess(int id)
         {
-            return Content(JsonConvert.SerializeObject(db.Orders.Where(x=>x.Id==id).Select(x=>new
+            return Content(JsonConvert.SerializeObject(db.Orders.Where(x => x.Id == id).Select(x => new
             {
-                time=x.GetTime,
-                name=x.Account.Name,
-                tel=x.Account.Tel,
-                total=x.OrderDetails.Sum(w=>w.Qty*w.Price)
+                time = x.GetTime,
+                name = x.Account.Name,
+                tel = x.Account.Tel,
+                total = x.OrderDetails.Sum(w => w.Qty * w.Price)
             })));
         }
         #endregion
@@ -122,13 +130,13 @@ namespace sys.Controllers
         public ActionResult ShowOrderStatus()
         {
             int id = Convert.ToInt32(Session["Id"]);
-            var result= db.Orders.Where(x => x.Cid == id).Select(x => new
+            var result = db.Orders.Where(x => x.Cid == id).Select(x => new
             {
                 id = x.Id,
                 status = x.Status,
                 time = x.GetTime,
                 total = x.OrderDetails.Sum(w => w.Price * w.Qty)
-            }).OrderByDescending(x=>x.status=="finish").ThenByDescending(x=>x.status=="done").ThenByDescending(x=>x.status=="ready").ThenByDescending(x=>x.status=="prepare").ThenByDescending(x=>x.time);
+            }).OrderByDescending(x => x.status == "finish").ThenByDescending(x => x.status == "done").ThenByDescending(x => x.status == "ready").ThenByDescending(x => x.status == "prepare").ThenByDescending(x => x.time);
             return Content(JsonConvert.SerializeObject(result));
         }
         #endregion
@@ -140,7 +148,7 @@ namespace sys.Controllers
             {
                 pid = x.Id,
                 name = x.ProductList.Name,
-                img = x.ProductList.ProductImg.Select(w=>w.Pimg).Take(1),
+                img = x.ProductList.ProductImg.Select(w => w.Pimg).Take(1),
                 options = x.Options,
                 Qty = x.Qty,
                 subtotal = x.Qty * x.Price,
@@ -158,17 +166,17 @@ namespace sys.Controllers
             {
                 name = x.Account.Name,
                 tel = x.Account.Tel,
-                ordertime=x.OrderTime,
+                ordertime = x.OrderTime,
                 gettime = x.GetTime,
-                totalQty = x.OrderDetails.Sum(w=>w.Qty),
-                totalAmount = x.OrderDetails.Sum(w => w.Qty*w.Price)
+                totalQty = x.OrderDetails.Sum(w => w.Qty),
+                totalAmount = x.OrderDetails.Sum(w => w.Qty * w.Price)
             });
             return Content(JsonConvert.SerializeObject(result));
         }
 
         #endregion
 
-        
+
 
         // GET: Order/Edit/5
         public ActionResult Edit(int? id)

@@ -39,10 +39,10 @@
                     <input type="submit" value="刪除" class="submit btn btn-default" style="margin-top: 5px" onclick="javascript:if(!window.confirm('你確定要刪除這個桌號嗎?')) window.event.returnValue = false;">
                     <input type="hidden" name="id" value=@item.Id>
                 </form>
-                @*<form action="~/Admin/BKTable/QRCode" method="post">
+                <form action="~/Admin/BKTable/QRCode" method="post">
                     <input type="submit" value="QR-code" class="submit btn btn-default" style="margin-top: 5px" >
                     <input type="hidden" name="id" value=@item.Id>
-                </form>*@
+                </form>
             </td>
         </tr>
         i++;

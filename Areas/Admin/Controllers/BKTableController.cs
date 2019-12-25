@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using MvcPaging;
@@ -31,7 +35,7 @@ namespace sys.Areas.Admin.Controllers
             {
                 page--;//ToPagedList的pageIndex預設第一頁是0,第二頁是1，所以要-1才是真的頁面
             }
-            return View(db.Accounts.Where(x=>x.IsTable==true).OrderByDescending(x=>x.Id).ToList().ToPagedList((int)page, PageSize));
+            return View(db.Accounts.Where(x => x.IsTable == true).OrderByDescending(x => x.Id).ToList().ToPagedList((int)page, PageSize));
         }
 
         // GET: Admin/BKTable/Create
@@ -55,6 +59,7 @@ namespace sys.Areas.Admin.Controllers
                     return Content("此帳號已存在，請勿重複設定");
                 }
                 //產生密碼鹽以及密碼加密
+                string urlPWD = account.Password;
                 string salt = Guid.NewGuid().ToString();
                 account.Password = GenerateHashWithSalt(account.Password, salt);
                 account.PasswordSalt = salt;
@@ -62,6 +67,11 @@ namespace sys.Areas.Admin.Controllers
                 account.wrong = 0;
                 account.IsTable = true;
                 account.IsCheck = true;
+                string data = "https://lay-order.rocket-coding.com/index.html#/login?" + urlPWD + "&" + account.Tel;
+                data = HttpUtility.UrlEncode(data);
+                string Url = "http://www.funcode-tech.com/Encoder_Service/img.aspx?custid=1&username=public&codetype=QR&EClevel=0&data=" + data;
+                var QRCode = GetQRCode(Url);
+                account.Vertify = QRCode;
                 db.Accounts.Add(account);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -69,6 +79,63 @@ namespace sys.Areas.Admin.Controllers
             catch (Exception)
             {
                 return View(account);
+            }
+        }
+        //public HttpResponseMessage GetQrCode()
+        //{
+        //    var imgPath = @"D:\ITdosCom\Images\itdos.jpg";
+        //    //从图片中读取byte  
+        //    var imgByte = File.ReadAllBytes(imgPath);
+        //    //从图片中读取流  
+        //    var imgStream = new MemoryStream(File.ReadAllBytes(imgPath));
+        //    var resp = new HttpResponseMessage(HttpStatusCode.OK)
+        //    {
+        //        Content = new ByteArrayContent(imgByte)
+        //        //或者  
+        //        //Content = new StreamContent(stream)  
+        //    };
+        //    resp.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpg");
+        //    return resp;
+        //}
+        //[Route("transfer")]
+        //[HttpGet]
+        //public async Task<HttpResponseMessage> TransferAsync(string url)
+        //{
+        //    HttpClient httpClient = new HttpClient();
+        //    return await httpClient.GetAsync(url);
+        //}
+        //private static string GetAPIResponse(string Url)
+        //{
+        //    try
+        //    {
+        //        var request = WebRequest.Create(Url);
+        //        string text;
+        //        var response = (HttpWebResponse)request.GetResponse();
+
+        //        using (var sr = new StreamReader(response.GetResponseStream()))
+        //        {
+        //            text = sr.ReadToEnd();
+        //        }
+        //        return text;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return string.Empty;
+        //    }
+        //}
+        private static string GetQRCode(string Url)
+        {
+            try
+            {
+                WebClient WebWay = new WebClient();
+                string fileName = String.Format("{0:yyyyMMddhhmmsss}.{1}", DateTime.Now, "png");
+                string FilePath = System.Web.HttpContext.Current.Server.MapPath(String.Format("/Admin/UploadFile/Img/{0}", fileName)); //存檔路徑
+                WebWay.DownloadFile(Url, FilePath); //利用WebWay這個方法下載至本機(下載路徑,存檔路徑)
+                return fileName;
+            }
+            catch (Exception)
+            {
+                return string.Empty;
             }
         }
         #region 密碼加密
@@ -109,6 +176,7 @@ namespace sys.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                string urlPWD = account.Password;
                 //密碼加密
                 if (!string.IsNullOrEmpty(NewPassword))
                 {
@@ -118,6 +186,11 @@ namespace sys.Areas.Admin.Controllers
                 }
                 account.IsTable = true;
                 account.IsCheck = true;
+                string data = "https://lay-order.rocket-coding.com/index.html#/login?" + urlPWD + "&" + account.Tel;
+                data = HttpUtility.UrlEncode(data);
+                string Url = "http://www.funcode-tech.com/Encoder_Service/img.aspx?custid=1&username=public&codetype=QR&EClevel=0&data="+data;
+                var QRCode = GetQRCode(Url);
+                account.Vertify = QRCode;
                 db.Entry(account).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -137,13 +210,13 @@ namespace sys.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        //public ActionResult QRCode(int id)
-        //{
-        //    Account table = db.Accounts.Find(id);
-        //    string url = "http://www.funcode-tech.com/Encoder_Service/img.aspx?custid=1&username=public&codetype=QR&EClevel=0&data=https://lay-order.rocket-coding.com/index.html#/login?"+ table.Password+"&"+ table.Id + "";
-        //    ViewBag.url
-        //}
+        //[ValidateAntiForgeryToken]
+        public ActionResult QRCode(int id)
+        {
+            Account table = db.Accounts.Find(id);
+            ViewBag.url = table.Vertify;
+            return View();
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

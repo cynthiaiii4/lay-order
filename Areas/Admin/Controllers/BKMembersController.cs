@@ -132,7 +132,7 @@ namespace sys.Areas.Admin.Controllers
                     //取得副檔名
                     string extension = Path.GetExtension(NewImg.FileName);
                     //新檔案名稱
-                    string fileName = String.Format("{0:yyyyMMddhhmmsss}.{1}", DateTime.Now, extension);
+                    string fileName = String.Format("{0:yyyyMMddhhmmsss}{1}", DateTime.Now, extension);
                     string savedName = Path.Combine(Server.MapPath("/Admin/UploadFile/Img"), fileName);
                     NewImg.SaveAs(savedName);
                     member.Img = fileName;
